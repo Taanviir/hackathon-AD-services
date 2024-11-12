@@ -5,10 +5,10 @@ FRONTEND_SERVICE = frontend
 DB_SERVICE = db
 ENV_FILE = .env
 
-all: build up
+all: up
 
 # Docker commands
-up:
+up: build
 	@$(DOCKER_COMPOSE) up -d
 
 down:
@@ -30,6 +30,8 @@ clean: prune
 fclean: down
 	@docker system prune -af
 	@docker volume ls -q | grep -q . && docker volume rm $$(docker volume ls -q) || true 
+
+rebuild: fclean up
 
 # Help
 help:

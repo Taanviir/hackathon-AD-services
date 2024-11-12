@@ -5,3 +5,4 @@ psycopg2-binary
 # numpy
 # pandas
 black
+django-cors-headers
