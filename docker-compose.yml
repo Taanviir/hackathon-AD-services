@@ -1,0 +1,58 @@
+services:
+  # Backend service (Django)
+  backend:
+    build: ./containers/backend
+    image: app-backend
+    container_name: backend
+    restart: on-failure
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app/backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  # Frontend service (React)
+  frontend:
+    build: ./containers/frontend
+    image: app-frontend
+    container_name: frontend
+    restart: on-failure
+    env_file:
+      - .env
+    volumes:
+      - ./frontend:/app/frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  # Database service (PostgreSQL)
+  db:
+    image: postgres:16-alpine
+    container_name: app-db
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+# Volumes to persist PostgreSQL data
+volumes:
+  db_data:
+    name: db_data
+
+
+networks:
+  app-network:
+    name: app-network
+    driver: bridge
