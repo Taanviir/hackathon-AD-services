@@ -1,4 +1,26 @@
 services:
+  # Database service (PostgreSQL)
+  db:
+    image: postgres:16-alpine
+    container_name: app-db
+    restart: on-failure
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      # start_period: 5s
+  
   # Backend service (Django)
   backend:
     build: ./containers/backend
@@ -7,14 +29,26 @@ services:
     restart: on-failure
     env_file:
       - .env
+    environment:
+      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
+      - REDIS_URL=redis://redis:6379/0
     volumes:
       - ./backend:/app/backend
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     ports:
       - "8000:8000"
-    depends_on:
-      - db
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health/"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      # start_period: 10s
 
   # Frontend service (React)
   frontend:
@@ -29,27 +63,31 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - app-network
 
-  # Database service (PostgreSQL)
-  db:
-    image: postgres:16-alpine
-    container_name: app-db
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - db_data:/var/lib/postgresql/data
+  redis:
+    container_name: redis
+    image: redis:6-alpine
+    restart: unless-stopped
     networks:
       - app-network
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 # Volumes to persist PostgreSQL data
 volumes:
   db_data:
     name: db_data
+  redis_data:
+    name: redis_data
 
 
 networks:

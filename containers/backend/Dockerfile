@@ -13,7 +13,7 @@ WORKDIR /app/backend
 
 # Install system dependencies required for spaCy and building packages
 RUN apk update && \
-    apk add --no-cache gcc g++ musl-dev libffi-dev
+    apk add --no-cache gcc g++ musl-dev libffi-dev curl
 
 # Install dependencies
 COPY requirements.txt ./

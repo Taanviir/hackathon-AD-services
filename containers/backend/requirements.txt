@@ -1,8 +1,14 @@
 django
 djangorestframework
+djangorestframework-simplejwt
+dj_database_url
+wheel
 psycopg2-binary
+black
+django-cors-headers
+django-redis
+PyJWT
+redis
 # spacy
 # numpy
 # pandas
-black
-django-cors-headers
