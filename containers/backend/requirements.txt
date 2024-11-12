@@ -1,8 +1,8 @@
 django
 djangorestframework
 psycopg2-binary
-# spacy
-# numpy
-# pandas
+spacy
+numpy
+pandas
 black
 django-cors-headers

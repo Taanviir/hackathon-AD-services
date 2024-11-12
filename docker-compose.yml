@@ -51,7 +51,6 @@ volumes:
   db_data:
     name: db_data
 
-
 networks:
   app-network:
     name: app-network
