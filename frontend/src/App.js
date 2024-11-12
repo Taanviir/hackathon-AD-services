@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 
 function App() {
     const [document, setDocument] = useState("");
@@ -8,10 +7,20 @@ function App() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8000/api/process_document/", {
-                document: document,
+            const response = await fetch("http://localhost:8000/api/process_document/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ document: document }),
             });
-            setSummary(response.data.summary);
+
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+
+            const data = await response.json();
+            setSummary(data.summary);
         } catch (error) {
             console.error("Error processing document:", error);
         }

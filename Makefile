@@ -1,5 +1,5 @@
 # Variables
-DOCKER_COMPOSE = docker-compose
+DOCKER_COMPOSE = docker-compose -f ./docker-compose.yml
 BACKEND_SERVICE = backend
 FRONTEND_SERVICE = frontend
 DB_SERVICE = db
@@ -15,7 +15,7 @@ down:
 	@$(DOCKER_COMPOSE) down
 
 build:
-	@$(DOCKER_COMPOSE) up --build -d
+	@$(DOCKER_COMPOSE) build
 
 restart: down up
 
@@ -26,6 +26,10 @@ prune:
 # Stop and remove Docker containers, networks, images, and volumes
 clean: prune
 	@docker system prune -f
+
+fclean: down
+	@docker system prune -af
+	@docker volume ls -q | grep -q . && docker volume rm $$(docker volume ls -q) || true 
 
 # Help
 help:

@@ -22,7 +22,7 @@ RUN pip install --root-user-action=ignore --no-cache-dir -r requirements.txt
 EXPOSE 8000
 
 # Use entrypoint script to handle migrations and start server
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["sh", "/app/entrypoint.sh"]
 
 # Run Django's development server
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

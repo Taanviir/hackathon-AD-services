@@ -1,12 +1,12 @@
 # Use official Node.js image
-FROM node:16-alpine
+FROM node:22-alpine
+
+
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 WORKDIR /app/frontend
 
-# Install dependencies
-# RUN npm install
-
 EXPOSE 3000
 
-# Run React development server
-# CMD ["npm", "start"]
+ENTRYPOINT ["sh", "/app/entrypoint.sh"]
