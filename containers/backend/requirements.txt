@@ -9,6 +9,6 @@ django-cors-headers
 django-redis
 PyJWT
 redis
-# spacy
-# numpy
-# pandas
+spacy
+numpy
+pandas

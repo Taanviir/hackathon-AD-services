@@ -19,6 +19,9 @@ RUN apk update && \
 COPY requirements.txt ./
 RUN pip install --root-user-action=ignore --no-cache-dir -r requirements.txt
 
+# Download spaCy model
+RUN python -m spacy download en_core_web_sm
+
 EXPOSE 8000
 
 # Use entrypoint script to handle migrations and start server
