@@ -5,4 +5,6 @@ urlpatterns = [
     path("", LandingView.as_view(), name="landing_page"),
     re_path(r"^home/?$", HomeView.as_view(), name="home_page"),
     re_path(r"^health/?$", HealthCheck.as_view(), name="health_check"),
+    re_path(r"^signup/?$", SignupView.as_view(), name="health_check"),
+    re_path(r"^login/?$", LoginView.as_view(), name="health_check"),
 ]
