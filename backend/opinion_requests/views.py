@@ -25,9 +25,9 @@ def classify_document_with_chatgpt(text):
     )
 
     try:
-        # Make a request to the OpenAI API with the new format (using the chat endpoint)
+        # Make a request to the OpenAI API with the new format
         response = openai.chat.completions.create(
-            model="gpt-4o-mini",  # You can also use gpt-4-turbo if available
+            model="gpt-4o-mini",
             messages=[
                 {
                     "role": "system",
@@ -39,14 +39,12 @@ def classify_document_with_chatgpt(text):
             temperature=0,  # Lower temperature for more predictable classification
         )
 
-        print(response)
-
         # Extract the department from the response
         department = response.choices[0].message.content.strip()
         return department
     except Exception as e:
         print(f"Error with OpenAI API: {e}")
-        return "Unknown"  # Default response in case of API error
+        return "Unknown"
 
 
 # API View for handling document processing
