@@ -73,11 +73,19 @@ class SignupView(APIView):
                 response.set_cookie(
                     "access_token",
                     str(refresh.access_token),
+<<<<<<< Updated upstream
                     samesite="Strict",
                     httponly=True,
                 )
                 response.set_cookie(
                     "refresh_token", str(refresh), samesite="Strict", httponly=True
+=======
+                    samesite="None",
+                    httponly=True,
+                )
+                response.set_cookie(
+                    "refresh_token", str(refresh), samesite="None", httponly=True
+>>>>>>> Stashed changes
                 )
                 print(
                     f"access tokens: {str(refresh.access_token)}, =>  Refresh: {str(refresh)}",
@@ -107,11 +115,19 @@ class LoginView(APIView):
                 response.set_cookie(
                     "access_token",
                     str(refresh.access_token),
+<<<<<<< Updated upstream
                     samesite="Strict",
                     httponly=True,
                 )
                 response.set_cookie(
                     "refresh_token", str(refresh), samesite="Strict", httponly=True
+=======
+                    samesite="None",
+                    httponly=True,
+                )
+                response.set_cookie(
+                    "refresh_token", str(refresh), samesite="None", httponly=True
+>>>>>>> Stashed changes
                 )
                 employee.last_login = timezone.now()
                 employee.save()
@@ -123,6 +139,7 @@ class LoginView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+<<<<<<< Updated upstream
 class SignOutView(View):
     authenctication_classes = [JWTCookieAuthentication]
     permission_classes = [IsAuthenticated]
@@ -152,3 +169,20 @@ class SignOutView(View):
         # and for this we will need to route the traffic through a reverse proxy - nginx using https
 
 """
+=======
+# class SignOutView(BaseView, View):
+# 	def get(self, request):
+# 		token_string = request.COOKIES.get('access_token')
+# 		if token_string:
+# 			try:
+# 				add_token_to_blacklist(token_string)
+# 			except jwt.ExpiredSignatureError or jwt.InvalidTokenError or jwt.DecodeError as e:
+# 				print('Token has: ', e)
+# 			response = HttpResponseRedirect(reverse('landing'))
+# 			response.delete_cookie('access_token')
+# 			response.delete_cookie('refresh_token')
+# 			response.delete_cookie('csrftoken')
+# 			response.singed_out = True
+# 			return response
+# 		return HttpResponseRedirect(reverse('landing'))
+>>>>>>> Stashed changes

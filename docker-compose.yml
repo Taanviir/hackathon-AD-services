@@ -52,21 +52,12 @@ services:
 
   # Frontend service (React)
   frontend:
-    build: ./containers/frontend
-    image: app-frontend
-    container_name: frontend
-    restart: on-failure
-    env_file:
-      - .env
-    volumes:
-      - ./frontend:/app/frontend
+    build:
+      context: .
+      dockerfile: containers/frontend/Dockerfile
     ports:
-      - "3000:3000"
-    depends_on:
-      backend:
-        condition: service_healthy
-    networks:
-      - app-network
+      - "3000:80"
+    restart: always
 
   redis:
     container_name: redis
