@@ -14,3 +14,4 @@ openai
 requests
 panda
 beautifulsoup4
+black
