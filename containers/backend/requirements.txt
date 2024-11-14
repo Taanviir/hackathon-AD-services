@@ -1,6 +1,10 @@
 django
 djangorestframework
+django-cors-headers
 psycopg2-binary
 openai
 black
-django-cors-headers
+requests
+panda
+numpy
+beautifulsoup4
