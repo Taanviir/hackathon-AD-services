@@ -59,6 +59,7 @@ def add_token_to_blacklist(token_string):
 class JWTCookieAuthentication(JWTAuthentication):
     def authenticate(self, request):
         raw_token = request.COOKIES.get("access_token")
+        print("raw token: ", raw_token, flush=True)
         if raw_token is None:
             raise AuthenticationFailed("No token found in cookies")
         try:

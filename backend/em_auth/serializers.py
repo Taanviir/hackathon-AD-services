@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Employee
 from django.contrib.auth import authenticate
 
+
 class EmployeeSignupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
@@ -32,6 +33,7 @@ class EmployeeSignupSerializer(serializers.ModelSerializer):
             )
         return username
 
+
 # Employee login serializer
 class EmployeeLoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
@@ -46,8 +48,10 @@ class EmployeeLoginSerializer(serializers.Serializer):
             user = authenticate(username=username, password=password)
             if user is None:
                 raise serializers.ValidationError("Invalid username or password.")
-            data['user'] = user  # Store the authenticated user in the validated data
+            data["user"] = user  # Store the authenticated user in the validated data
         else:
-            raise serializers.ValidationError("Both username and password are required.")
-        
+            raise serializers.ValidationError(
+                "Both username and password are required."
+            )
+
         return data

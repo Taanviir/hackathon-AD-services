@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     # auth app
     "em_auth",
+    "opinion_requests",
 ]
 
 MIDDLEWARE = [
@@ -203,9 +204,9 @@ SIMPLE_JWT = {
 }
 
 # redis settings
-# REDIS_HOST = "redis"
-# REDIS_PORT = 6379
-# REDIS_DB = 0
+REDIS_HOST = "redis"
+REDIS_PORT = 6379
+REDIS_DB = 0
 
 # Cache - Redis
 CACHES = {
