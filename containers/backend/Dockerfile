@@ -12,8 +12,8 @@ RUN chmod +x /app/entrypoint.sh
 WORKDIR /app/backend
 
 # Install system dependencies required for spaCy and building packages
-RUN apk update && \
-    apk add --no-cache gcc g++ musl-dev libffi-dev curl
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y gcc g++ musl-dev libffi-dev curl
 
 # Install dependencies
 COPY requirements.txt ./

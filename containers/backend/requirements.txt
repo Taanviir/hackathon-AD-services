@@ -8,10 +8,6 @@ psycopg2-binary
 django-redis
 PyJWT
 redis
-<<<<<<< Updated upstream
-black
-=======
->>>>>>> Stashed changes
 numpy
 pandas
 openai
