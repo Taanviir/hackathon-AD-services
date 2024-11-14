@@ -145,7 +145,6 @@ class SignOutView(View):
         return HttpResponseRedirect(reverse("landing_page"))
 
 
-
 """ TODO: 
 
     -> JWT token pairs are disappearing after a refresh - need to fix this

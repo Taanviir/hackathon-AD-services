@@ -1,5 +1,5 @@
 # Use official Python image
-FROM python:3.12-alpine
+FROM python:3.13-slim
 
 # Set environment variable for Django settings
 ENV PYTHONUNBUFFERED 1
@@ -18,9 +18,6 @@ RUN apk update && \
 # Install dependencies
 COPY requirements.txt ./
 RUN pip install --root-user-action=ignore --no-cache-dir -r requirements.txt
-
-# Download spaCy model
-RUN python -m spacy download en_core_web_sm
 
 EXPOSE 8000
 
