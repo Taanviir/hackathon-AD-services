@@ -1,9 +1,5 @@
 # Variables
 DOCKER_COMPOSE = docker-compose -f ./docker-compose.yml
-BACKEND_SERVICE = backend
-FRONTEND_SERVICE = frontend
-DB_SERVICE = db
-ENV_FILE = .env
 
 all: up
 

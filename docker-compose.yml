@@ -47,7 +47,7 @@ services:
   app-frontend:
     build:
       context: .
-      dockerfile: containers/frontend/Dockerfile
+      dockerfile: ./containers/frontend/Dockerfile
     image: app-frontend
     container_name: app-frontend
     restart: always
@@ -56,6 +56,8 @@ services:
         condition: service_healthy
     ports:
       - "80:80"
+    volumes:
+      - ./containers/frontend/app.conf:/etc/nginx/conf.d/app.conf
     networks:
       - app-network
 

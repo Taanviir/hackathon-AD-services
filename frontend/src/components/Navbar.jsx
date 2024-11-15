@@ -7,7 +7,7 @@ const Navbar = () => {
       {/* Logo */}
       <img
         className="ms-3"
-        src="../../public/SmartGov.svg"
+        src="/SmartGov.svg"
         alt="website logo"
       />
       {/* <div className="text-xl font-bold text-gray-800">SmartGov</div> */}
