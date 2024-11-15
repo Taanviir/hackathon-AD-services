@@ -10,9 +10,14 @@ if [ ! -f "package.json" ]; then
     exit 1
 fi
 
-# Install dependencies
-echo "Installing dependencies in /app/frontend..."
-npm install
+# Check for package-lock.json and decide whether to use npm ci or npm install
+if [ -f "package-lock.json" ]; then
+    echo "package-lock.json found. Installing dependencies with npm ci..."
+    npm ci
+else
+    echo "package-lock.json not found. Installing dependencies with npm install..."
+    npm install
+fi
 
 # Start the React app
 echo "Starting the React app..."
