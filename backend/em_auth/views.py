@@ -44,7 +44,7 @@ class SignupView(APIView):
 
     def get(self, request):
         return HttpResponse("Welcome to the sign up page")
-    
+
     def post(self, request):
         print("we in the signup view", flush=True)
         serializer = EmployeeSignupSerializer(data=request.data)
@@ -83,7 +83,7 @@ class LoginView(APIView):
 
     def get(self, request):
         return HttpResponse("Welcome to the login page")
-    
+
     def post(self, request):
         print("Cookies: ", request.COOKIES, flush=True)
         serializer = EmployeeLoginSerializer(data=request.data)
