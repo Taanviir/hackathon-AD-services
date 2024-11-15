@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 import os
-import openai
+import logging
 from pathlib import Path
 import dj_database_url
 from datetime import timedelta
@@ -67,7 +67,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
 ]
 
-""" ***************************************** CORS Settings ***************************************** """
+# CORS Settings
 ALLOWED_HOSTS = []
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -78,16 +78,6 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
-
-""" ***************************************** Database Linking ***************************************** """
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {"default": dj_database_url.config(default=os.environ.get("DATABASE_URL"))}
-
-""" ***************************************** Database Linking ***************************************** """
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "em_auth.Employee"
 
@@ -115,6 +105,8 @@ WSGI_APPLICATION = "admin.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+DATABASES = {"default": dj_database_url.config(default=os.environ.get("DATABASE_URL"))}
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -126,6 +118,7 @@ DATABASES = {
     }
 }
 
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -222,8 +215,6 @@ CACHES = {
         },
     }
 }
-
-import logging
 
 
 class HealthCheckFilter(logging.Filter):

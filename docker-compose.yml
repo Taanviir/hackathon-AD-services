@@ -19,19 +19,15 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-      # start_period: 5s
   
   # Backend service (Django)
-  backend:
+  app-backend:
     build: ./containers/backend
     image: app-backend
-    container_name: backend
+    container_name: app-backend
     restart: on-failure
     env_file:
       - .env
-    environment:
-      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
-      - REDIS_URL=redis://redis:6379/0
     volumes:
       - ./backend:/app/backend
     depends_on:
@@ -39,35 +35,31 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    ports:
-      - "8000:8000"
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health/"]
-      interval: 5s
-      timeout: 5s
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health/ || exit 1"]
+      interval: 15s
+      timeout: 15s
       retries: 5
-      # start_period: 10s
 
   # Frontend service (React)
-  frontend:
-    build: ./containers/frontend
+  app-frontend:
+    build:
+      context: .
+      dockerfile: containers/frontend/Dockerfile
     image: app-frontend
-    container_name: frontend
-    restart: on-failure
-    env_file:
-      - .env
-    volumes:
-      - ./frontend:/app/frontend
-    ports:
-      - "3000:3000"
+    container_name: app-frontend
+    restart: always
     depends_on:
-      backend:
+      app-backend:
         condition: service_healthy
+    ports:
+      - "80:80"
     networks:
       - app-network
 
+  # Cache service (Redis)
   redis:
     container_name: redis
     image: redis:6-alpine
