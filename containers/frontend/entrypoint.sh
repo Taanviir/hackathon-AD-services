@@ -20,6 +20,7 @@ cd /app/frontend
 # Install dependencies
 echo "Installing dependencies in /app/frontend..."
 npm --loglevel verbose install
+npm install lucide-react
 
 # Start the React app
 echo "Starting the React app..."

@@ -48,7 +48,10 @@ def generate_insight(data):
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": f"Summarize the following data and provide insights: {data}"}
+                {
+                    "role": "user",
+                    "content": f"Summarize the following data and provide insights: {data}",
+                },
             ],
             max_tokens=150,
         )

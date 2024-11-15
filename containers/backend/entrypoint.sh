@@ -10,6 +10,7 @@ black .
 echo "Running database migrations..."
 python manage.py makemigrations
 python manage.py migrate
+pip freeze > requirements.txt
 
 # Start the Django server
 echo "Starting Django server..."
