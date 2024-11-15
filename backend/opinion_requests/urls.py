@@ -1,8 +1,6 @@
 from django.urls import path
-from .views import DocumentProcessingView
+from .views import OpinionRequestsView
 
 urlpatterns = [
-    path(
-        "process_document/", DocumentProcessingView.as_view(), name="process_document"
-    ),
+    path("process_document/", OpinionRequestsView.as_view(), name="process_document"),
 ]

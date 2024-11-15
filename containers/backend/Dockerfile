@@ -1,5 +1,5 @@
 # Use official Python image
-FROM python:3.12-alpine
+FROM python:3.13-slim
 
 # Set environment variable for Django settings
 ENV PYTHONUNBUFFERED 1
@@ -10,10 +10,6 @@ COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
 WORKDIR /app/backend
-
-# Install system dependencies required for spaCy and building packages
-RUN apk update && \
-    apk add --no-cache gcc g++ musl-dev libffi-dev
 
 # Install dependencies
 COPY requirements.txt ./
