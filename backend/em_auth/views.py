@@ -1,42 +1,24 @@
-from django.db import connection
+import jwt
 from django.http import HttpResponse
 from django.views import View
 from django.utils import timezone
-
-# from django.utils.decorators import method_decorator
-# from django.views.decorators.csrf import csrf_protect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import *
-from django.contrib.auth import authenticate
-from .auth_middleware import *
-from django.http import HttpResponseRedirect
 from rest_framework.permissions import IsAuthenticated
+from .serializers import EmployeeSignupSerializer, EmployeeLoginSerializer
+from .middleware import JWTCookieAuthentication, add_token_to_blacklist
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 
-# Health check view
-class HealthCheck(View):
-    authentication_classes = []
-    permission_classes = []
-
-    def get(self, request):
-        try:
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT 1")
-            return HttpResponse("OK", status=200, content_type="text/plain")
-        except Exception:
-            return HttpResponse("ERROR", status=500, content_type="text/plain")
-
-
-""" 
+"""
 By default, DRF uses the:
     - SessionAuthentication and,
     - BasicAuthentication classes if you do not specify any.
     - if you want to allow all, you can set the authentication_classes to an empty list
- """
+"""
 
 
 # landing view
@@ -145,10 +127,11 @@ class SignOutView(View):
         return HttpResponseRedirect(reverse("landing_page"))
 
 
-""" TODO: 
+"""
+    TODO:
 
     -> JWT token pairs are disappearing after a refresh - need to fix this
         * if you set the samesite to None, you need to set the secure to True
-        # and for this we will need to route the traffic through a reverse proxy - nginx using https
-
+        # and for this we will need to route the traffic through a reverse 
+          proxy - nginx using https
 """

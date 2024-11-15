@@ -19,7 +19,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-      # start_period: 5s
   
   # Backend service (Django)
   backend:
@@ -29,9 +28,6 @@ services:
     restart: on-failure
     env_file:
       - .env
-    environment:
-      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
-      - REDIS_URL=redis://redis:6379/0
     volumes:
       - ./backend:/app/backend
     depends_on:
@@ -44,11 +40,10 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health/"]
-      interval: 5s
-      timeout: 5s
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:8000/health/ || exit 1"]
+      interval: 15s
+      timeout: 15s
       retries: 5
-      # start_period: 10s
 
   # Frontend service (React)
   frontend:

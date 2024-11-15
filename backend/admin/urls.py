@@ -17,10 +17,17 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.http import HttpResponse
+
+
+def check_health(request):
+    return HttpResponse("OK", status=200)
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("opinion_requests.urls")),
     path("api/", include("em_auth.urls")),
     path("api/", include("research.urls")),
+    path("health/", check_health),
 ]
