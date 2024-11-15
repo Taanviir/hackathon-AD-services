@@ -1,8 +1,8 @@
+import redis
+import jwt
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken, AuthenticationFailed
-import redis
 from django.conf import settings
-import jwt
 
 
 # strict redis instance - comes with redis client
@@ -48,10 +48,13 @@ def add_token_to_blacklist(token_string):
         jti = token["jti"]
         redis_instance.setex(jti, expires_in, "blacklisted")
     except jwt.ExpiredSignatureError:
+        print("Token has expired", flush=True)
         return True
-    except jwt.InvalidTokenError as e:
+    except jwt.InvalidTokenError:
+        print("Invalid token", flush=True)
         return True
-    except Exception as e:
+    except Exception:
+        print("Error decoding token", flush=True)
         return True
 
 
@@ -73,4 +76,4 @@ class JWTCookieAuthentication(JWTAuthentication):
         except AuthenticationFailed as e:
             raise AuthenticationFailed(str(e))
         except Exception as e:
-            raise AuthenticationFailed("An unexpected error occurred.")
+            raise AuthenticationFailed(f"An unexpected error occurred: {e}")

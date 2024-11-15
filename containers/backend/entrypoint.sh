@@ -8,10 +8,9 @@ black .
 
 # Run migrations
 echo "Running database migrations..."
-python manage.py makemigrations
+python manage.py makemigrations em_auth opinion_requests research
 python manage.py migrate
-pip freeze > requirements.txt
 
 # Start the Django server
 echo "Starting Django server..."
-exec "$@"
+python manage.py runserver "0.0.0.0:8000"
