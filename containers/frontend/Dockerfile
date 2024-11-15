@@ -1,11 +1,13 @@
 # Use official Node.js image
-FROM node:22-alpine
+FROM node:22-alpine AS build
 
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+WORKDIR /app
+COPY ../../frontend/package*.json ./
+RUN  npm install
+COPY frontend/ .
+RUN npm run build
 
-WORKDIR /app/frontend
-
-EXPOSE 3000
-
-ENTRYPOINT ["sh", "/app/entrypoint.sh"]
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

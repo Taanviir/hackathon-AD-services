@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Roboto Flex", sans-serif;
+  color: #534615;
+  background: linear-gradient(
+    241deg,
+    #d5caa8 2.95%,
+    #cac6b9 54.56%,
+    #a5a193 78.2%
+  );
+}
+
+/* /api/signup */

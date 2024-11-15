@@ -8,10 +8,10 @@ psycopg2-binary
 django-redis
 PyJWT
 redis
-black
 numpy
 pandas
 openai
 requests
 panda
 beautifulsoup4
+black
