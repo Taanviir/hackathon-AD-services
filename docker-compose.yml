@@ -40,7 +40,7 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://127.0.0.1:8000/health/ || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health/ || exit 1"]
       interval: 15s
       timeout: 15s
       retries: 5
@@ -63,6 +63,7 @@ services:
     networks:
       - app-network
 
+  # Cache service (Redis)
   redis:
     container_name: redis
     image: redis:6-alpine
