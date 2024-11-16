@@ -46,7 +46,7 @@ class SignupView(APIView):
         return HttpResponse("Welcome to the sign up page")
 
     def post(self, request):
-        print("we in the signup view", flush=True)
+        print("we in the signup view: ", request.data, flush=True)
         serializer = EmployeeSignupSerializer(data=request.data)
         if serializer.is_valid():
             new_employee = serializer.save()
@@ -85,7 +85,6 @@ class LoginView(APIView):
         return HttpResponse("Welcome to the login page")
 
     def post(self, request):
-        print("Cookies: ", request.COOKIES, flush=True)
         serializer = EmployeeLoginSerializer(data=request.data)
         if serializer.is_valid():
             employee = serializer.validated_data["user"]
