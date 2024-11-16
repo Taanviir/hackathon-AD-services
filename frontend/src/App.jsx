@@ -25,35 +25,31 @@ const App = () => {
         }
     };
 
-    // Check authentication status when the app mounts
     useEffect(() => {
         checkAuthStatus();
     }, []);
 
     const handleLogin = () => {
-        // Simulate login action (after successfully logging in, set the token)
         setIsLoggedIn(true);
     };
 
     const handleLogout = () => {
-        // Simulate logout action (clear the token, make an API call to logout, etc.)
         setIsLoggedIn(false);
     };
 
     return (
         <Router>
             <div className="flex flex-col h-screen">
-                {isLoggedIn && <Navbar />}
                 <div className="flex flex-1">
                     {isLoggedIn && <Sidebar />}
                     <div className="flex-1 p-8">
                         <Routes>
-                            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+                            <Route path="/login" element={isLoggedIn ? <Home /> : <Login onLogin={handleLogin} />} />
                             <Route
                                 path="/"
-                                element={isLoggedIn ? <Home /> : <Navigate to="/signup" />}
+                                element={isLoggedIn ? <Home /> : <Navigate to="/login" />}
                             />
-                            <Route path="/signup" element={<Signup />} />
+                            <Route path="/signup" element={isLoggedIn ? <Home /> : <Signup />} />
                             <Route
                                 path="/submit-internal-opinion"
                                 element={isLoggedIn ? <SubmitInternalOpinion /> : <Navigate to="/login" />}
