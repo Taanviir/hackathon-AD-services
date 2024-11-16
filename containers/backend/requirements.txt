@@ -12,6 +12,9 @@ numpy
 pandas
 openai
 requests
-panda
 beautifulsoup4
 black
+PyPDF2
+docx
+pytesseract
+pillow
