@@ -53,7 +53,7 @@ function Signup() {
         setDepartment("");
         setPosition("");
         // route it to the home page
-        navigate("/");
+        navigate("/login");
       } else {
         const errorData = await response.json();
         setErrorMessage(errorData.detail || "Signup failed!"); // Set error message from response

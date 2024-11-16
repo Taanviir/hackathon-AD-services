@@ -1,18 +1,43 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate(); // Initialize the navigate function
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Email:", email);
     console.log("Password:", password);
+
+    // Example API call for login
+    try {
+      const response = await fetch("http://localhost:8000/api/login/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: "include", // Include cookies if needed
+      });
+
+      if (response.ok) {
+        // If login is successful, navigate to the home page
+        navigate("/"); // Redirect to home page
+      } else {
+        const errorData = await response.json();
+        console.error("Login failed:", errorData.detail);
+        // Handle login failure (e.g., show an error message)
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      // Handle network errors
+    }
   };
 
   return (
-    <div classHome="w-full overflow-hidden">
+    <div className="w-full overflow-hidden">
       <img
         src="/VectorBg.svg"
         alt="vector bg"

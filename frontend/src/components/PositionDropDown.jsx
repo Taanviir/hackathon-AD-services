@@ -9,7 +9,7 @@ function PositionSelect({ position, setPosition }) {
 
   return (
     <div className="mb-4">
-      <label htmlFor="position" className="block mb-2 text-lg font-medium">
+      <label htmlFor="position" className="block mb-2 ms-2 text-lg font-medium">
         Position
       </label>
       <select

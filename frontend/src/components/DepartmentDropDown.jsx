@@ -16,7 +16,7 @@ function DepartmentSelect({ department, setDepartment }) {
 
   return (
     <div className="mb-4">
-      <label htmlFor="department" className="block mb-2 text-lg font-medium">
+      <label htmlFor="department" className="block mb-2 ms-2 text-lg font-medium">
         Department
       </label>
       <select
