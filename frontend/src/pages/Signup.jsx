@@ -30,6 +30,7 @@ function Signup() {
     if (position === "") {
       position = "Manager";
     }
+
     console.log("Department:", department);
     console.log("positon:", position);
     try {
