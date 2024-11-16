@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-function Login() {
+function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Email:", email);
     console.log("Password:", password);
 
-    // Example API call for login
     try {
       const response = await fetch("http://localhost:8000/api/login/", {
         method: "POST",
@@ -19,20 +18,19 @@ function Login() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
-        credentials: "include", // Include cookies if needed
+        credentials: "include",
       });
 
       if (response.ok) {
-        // If login is successful, navigate to the home page
-        navigate("/"); // Redirect to home page
+        console.log("Login successful!");
+        onLogin();
+        navigate("/");
       } else {
         const errorData = await response.json();
         console.error("Login failed:", errorData.detail);
-        // Handle login failure (e.g., show an error message)
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      // Handle network errors
     }
   };
 
@@ -43,7 +41,7 @@ function Login() {
         alt="vector bg"
         className="top-[0%] left-[0%] absolute w-full"
       />
-      <div className="absolute left-[36%] top-[20%]">
+      <div className="absolute left-[36%] top-[20%] ">
         <div className="ms-2">
           <img
             src="/SmartGovLogo.svg"
