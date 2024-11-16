@@ -6,6 +6,9 @@ from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 from em_auth.middleware import JWTCookieAuthentication
 from .serializers import OpinionRequestSerializer
+from rest_framework import viewsets
+from .models import OpinionRequest
+from em_auth.models import Employee
 
 
 # Configure OpenAI API Key
@@ -67,16 +70,35 @@ class DocumentProcessingView(APIView):
         return Response({"summary": summary}, status=status.HTTP_200_OK)
 
 
-class OpinionRequestView(APIView):
-    authentication_classes = [JWTCookieAuthentication]
-    permission_classes = [IsAuthenticated]
+class OpinionRequestViewSet(viewsets.ViewSet):
+    authentication_classes = []
+    permission_classes = []
+    # authentication_classes = [JWTCookieAuthentication]
+    # permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        # Manually set 'requester' to the currently authenticated user
+    def list(self, request):
+        queryset = OpinionRequest.objects.all()
+        serializer = OpinionRequestSerializer(queryset, many=True)
+        print("List of opinion requests", flush=True)
+        return Response(serializer.data)
+
+    def create(self, request):
         serializer = OpinionRequestSerializer(data=request.data)
         if serializer.is_valid():
             # Pass the user explicitly as 'requester'
+            emp_id = Employee.objects.all()[0]
             print(request.user, flush=True)
-            serializer.save(requester=request.user)
+            serializer.save(requester=emp_id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def retrieve(self, request, pk=None):
+        try:
+            # Retrieve the specific OpinionRequest instance by pk
+            opinion_request = OpinionRequest.objects.get(pk=pk)
+            serializer = OpinionRequestSerializer(opinion_request)
+            return Response(serializer.data)
+        except OpinionRequest.DoesNotExist:
+            return Response(
+                {"error": "OpinionRequest not found."}, status=status.HTTP_404_NOT_FOUND
+            )

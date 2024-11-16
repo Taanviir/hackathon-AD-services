@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import PriorityLevelSelector from "../components/PriorityLevelSelector";
 
-const SubmitInternalOpinion = () => {
+const SubmitInternalOpinion = async () => {
   const [requestTitle, setRequestTitle] = useState("");
   const [requestDescription, setRequestDescription] = useState("");
   const [priorityLevel, setPriorityLevel] = useState("");
@@ -13,9 +13,10 @@ const SubmitInternalOpinion = () => {
     setFile(e.target.files[0]); // Set the uploaded file
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle form submission logic here
+    // const response = await fetch("http://localhost:8000/api/zzzzz", {});
     console.log({
       requestTitle,
       requestDescription,
