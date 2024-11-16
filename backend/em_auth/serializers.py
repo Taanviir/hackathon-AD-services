@@ -40,10 +40,14 @@ class EmployeeLoginSerializer(serializers.Serializer):
     def validate(self, data):
         email = data.get("email")
         password = data.get("password")
+
         try:
             emp = Employee.objects.get(email=email)
             if emp.check_password(password):  # Assuming `check_password` is available
-                data['user'] = emp
-                return data
+                data["user"] = emp
+            else:
+                raise serializers.ValidationError("Invalid password.")
         except Employee.DoesNotExist:
-            return None
+            raise serializers.ValidationError("Invalid email or password.")
+
+        return data
