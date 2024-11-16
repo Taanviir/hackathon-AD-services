@@ -2,21 +2,19 @@
 import React, { useState } from "react";
 import PriorityLevelSelector from "../components/PriorityLevelSelector";
 
-const SubmitInternalOpinion = async () => {
+const SubmitInternalOpinion = () => {
   const [requestTitle, setRequestTitle] = useState("");
   const [requestDescription, setRequestDescription] = useState("");
   const [priorityLevel, setPriorityLevel] = useState("");
   const [dueDate, setDueDate] = useState("");
-  const [file, setFile] = useState(null); // State for the uploaded file
+  const [file, setFile] = useState(null);
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]); // Set the uploaded file
+    setFile(e.target.files[0]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    // const response = await fetch("http://localhost:8000/api/zzzzz", {});
     console.log({
       requestTitle,
       requestDescription,
@@ -24,6 +22,51 @@ const SubmitInternalOpinion = async () => {
       dueDate,
       file,
     });
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      // Create a FormData object to send the data
+      const formData = new FormData();
+      formData.append("request_title", requestTitle);
+      formData.append("request_description", requestDescription);
+      formData.append("priority_level", priorityLevel);
+      formData.append("due_date", dueDate);
+      if (file) {
+        formData.append("file", file);
+      }
+
+      try {
+        const response = await fetch(
+          "http://localhost:8000/api/opinion_request/",
+          {
+            method: "POST",
+            body: formData,
+            headers: {
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json(); // Parse the JSON response
+        setResponseMessage("Request submitted successfully!");
+        console.log(data); // Log the response data for debugging
+      } catch (error) {
+        console.error("Error submitting the request:", error);
+        setResponseMessage("An error occurred while submitting the request.");
+      }
+
+      // Reset the form fields
+      setRequestTitle("");
+      setRequestDescription("");
+      setPriorityLevel("");
+      setDueDate("");
+      setFile(null);
+    };
+
     setRequestTitle("");
     setRequestDescription("");
     setPriorityLevel("");
