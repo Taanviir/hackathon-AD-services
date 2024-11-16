@@ -83,6 +83,7 @@ class OpinionRequestViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
     def create(self, request):
+        print("Request data: ", request.data, flush=True)
         serializer = OpinionRequestSerializer(data=request.data)
         if serializer.is_valid():
             # Pass the user explicitly as 'requester'

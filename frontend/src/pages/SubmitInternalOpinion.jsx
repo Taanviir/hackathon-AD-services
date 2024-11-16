@@ -23,56 +23,56 @@ const SubmitInternalOpinion = () => {
       file,
     });
 
-    const handleSubmit = async (e) => {
-      e.preventDefault();
+    console.log("Submitting request...");
 
-      // Create a FormData object to send the data
-      const formData = new FormData();
-      formData.append("request_title", requestTitle);
-      formData.append("request_description", requestDescription);
-      formData.append("priority_level", priorityLevel);
-      formData.append("due_date", dueDate);
-      if (file) {
-        formData.append("file", file);
+    const formData = new FormData();
+    formData.append("title", requestTitle);
+    formData.append("description", requestDescription);
+    formData.append("priority", priorityLevel);
+    formData.append("deadline", dueDate);
+    if (file) {
+      formData.append("file", file);
+    }
+
+    try {
+      const response = await fetch("http://localhost:8000/api/opinion_request/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        console.log("submited successful!");
+      } else {
+        console.error("submisson failed:", errorData.detail);
+        throw new Error("Submission failed");
       }
-
-      try {
-        const response = await fetch(
-          "http://localhost:8000/api/opinion_request/",
-          {
-            method: "POST",
-            body: formData,
-            headers: {
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json(); // Parse the JSON response
-        setResponseMessage("Request submitted successfully!");
-        console.log(data); // Log the response data for debugging
-      } catch (error) {
-        console.error("Error submitting the request:", error);
-        setResponseMessage("An error occurred while submitting the request.");
-      }
-
-      // Reset the form fields
-      setRequestTitle("");
-      setRequestDescription("");
-      setPriorityLevel("");
-      setDueDate("");
-      setFile(null);
-    };
-
-    setRequestTitle("");
-    setRequestDescription("");
-    setPriorityLevel("");
-    setDueDate("");
-    setFile(null);
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   };
+  //   const handleSubmit = async (e) => {
+  //     e.preventDefault();
+
+  //     // Create a FormData object to send the data
+
+  //     // Reset the form fields
+  //     setRequestTitle("");
+  //     setRequestDescription("");
+  //     setPriorityLevel("");
+  //     setDueDate("");
+  //     setFile(null);
+  //   };
+
+  //   setRequestTitle("");
+  //   setRequestDescription("");
+  //   setPriorityLevel("");
+  //   setDueDate("");
+  //   setFile(null);
+  // };
 
   return (
     <div className="flex flex-col justify-center h-full overflow-hidden">
