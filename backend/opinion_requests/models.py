@@ -44,6 +44,7 @@ class OpinionRequest(models.Model):
     assigned_to = models.ForeignKey(
         Employee, on_delete=models.CASCADE, related_name="assigned_to", null=True
     )
+    resource = models.FileField(upload_to="resources/", null=True, blank=True)
 
     class Meta:
         db_table = "opinion_requests"

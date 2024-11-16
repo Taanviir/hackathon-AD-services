@@ -6,7 +6,7 @@ from django.contrib.auth.models import AbstractUser
 class Employee(AbstractUser):
     id = models.BigAutoField(primary_key=True)
     full_name = models.CharField(max_length=150, blank=True)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, blank=False)
     department = models.CharField(max_length=150, blank=False)
     position = models.CharField(max_length=150, blank=False)
     password = models.CharField(max_length=150)
