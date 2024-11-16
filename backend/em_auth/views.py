@@ -60,9 +60,7 @@ class SignupView(APIView):
                     str(refresh.access_token),
                     samesite="Strict",
                 )
-                response.set_cookie(
-                    "refresh_token", str(refresh), samesite="Strict"
-                )
+                response.set_cookie("refresh_token", str(refresh), samesite="Strict")
                 print(
                     f"access tokens: {str(refresh.access_token)}, =>  Refresh: {str(refresh)}",
                     flush=True,
@@ -95,9 +93,7 @@ class LoginView(APIView):
                     str(refresh.access_token),
                     samesite="Strict",
                 )
-                response.set_cookie(
-                    "refresh_token", str(refresh), samesite="Strict"
-                )
+                response.set_cookie("refresh_token", str(refresh), samesite="Strict")
                 employee.last_login = timezone.now()
                 employee.save()
                 return response
