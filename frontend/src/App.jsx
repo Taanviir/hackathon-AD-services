@@ -3,24 +3,17 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Home from './pages/Home';
-import SubmitInternalOpinion from './pages/SubmitInternalOpinion'; // Import the new page
-import Navbar from './components/Navbar'; // Import Navbar
-import Sidebar from './components/Sidebar'; // Import Sidebar
+import SubmitInternalOpinion from './pages/SubmitInternalOpinion';
+import Sidebar from './components/Sidebar';
 
 const App = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    console.log(isLoggedIn);
-    // Function to check if the user is authenticated
     const checkAuthStatus = () => {
-        // For the sake of example, we'll simulate an authentication check.
         const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('access_token='));
         if (token) {
-            console.log(token);
-            console.log('User is authenticated');
             setIsLoggedIn(true);
         } else {
-            console.log('User is not authenticated');
             setIsLoggedIn(false);
         }
     };
