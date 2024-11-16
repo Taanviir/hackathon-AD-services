@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
-function DepartmentSelect() {
-  const [department, setDepartment] = useState("");
-
+function DepartmentSelect({ department, setDepartment }) {
   // Define a list of departments
   const departments = [
     "Human Resources",
@@ -18,7 +16,7 @@ function DepartmentSelect() {
 
   return (
     <div className="mb-4">
-      <label htmlFor="department" className="block mb-2 text-sm font-medium">
+      <label htmlFor="department" className="block mb-2 text-lg font-medium">
         Department
       </label>
       <select

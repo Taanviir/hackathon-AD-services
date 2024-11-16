@@ -11,6 +11,7 @@ body {
     #bdb9ac 29.83%,
     #9a978c 77.73%
   );
+  overflow: hidden;
 }
 
 /* /api/signup */

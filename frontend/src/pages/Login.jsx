@@ -1,78 +1,77 @@
-// src/pages/Login.jsx
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
-  const handleSubmit = async (e) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-  
-    // Add API call for login here
-    try {
-      const response = await fetch('http://localhost:8000/api/login/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-        credentials: 'include', 
-      });
-      if (response.ok) {
-        navigate('/');
-      } else {
-        throw new Error('Login failed');
-      }
-      
-    } catch (error) {
-      console.error(error);
-      // setErrorMessage(errorData.detail || "Signup failed!"); // Set error message from response
-      // setSuccessMessage(""); // Clear success message
-    }
+    console.log("Email:", email);
+    console.log("Password:", password);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <img src="/SmartGov.svg" alt="smartGov logo" className='mb-8' />
-      <div className="w-full max-w-md p-8 bg-[rgba(255,255,255,0.6)] rounded-lg shadow-whiteGold">
-        <h2 className="mb-6 text-2xl font-bold text-center">Login</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="email" className="block mb-2 text-sm font-medium">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-gold-200 focus:border-gold-300"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="password" className="block mb-2 text-sm font-medium">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-gold-200 focus:border-gold-300"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full px-4 py-2 font-bold text-white bg-gold-700 rounded-lg hover:bg-gold-500"
-          >
-            Log In
-          </button>
-        </form>
-        <p className="mt-4 text-sm text-center">
-          Don't have an account? <Link to="/signup" className="text-gold-800 hover:underline">Sign Up</Link>
-        </p>
+    <div classHome="w-full overflow-hidden">
+      <img
+        src="/VectorBg.svg"
+        alt="vector bg"
+        className="top-[0%] left-[0%] absolute w-full"
+      />
+      <div className="absolute left-[36%] top-[20%]">
+        <div className="ms-2">
+          <img
+            src="/SmartGovLogo.svg"
+            alt="smartGov logo"
+            className="mb-8 ms-20"
+          />
+        </div>
+        <div className="p-8 bg-[rgba(255,255,255,0.7)] rounded-lg w-[120%] shadow-whiteGold">
+          <h2 className="mb-6 text-3xl font-bold text-center">Login</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label htmlFor="email" className="block mb-2 text-lg font-medium ms-2">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-gold-200 focus:border-gold-300"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="password"
+                className="block mb-2 text-lg font-medium ms-2"
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-gold-200 focus:border-gold-300"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="mt-2 w-full px-4 py-2 font-bold text-white bg-gold-700 rounded-lg hover:bg-gold-500"
+            >
+              Log In
+            </button>
+          </form>
+          <p className="mt-4 text-sm text-center">
+            Don't have an account?{" "}
+            <Link to="/signup" className="text-gold-800 hover:underline">
+              Sign Up
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

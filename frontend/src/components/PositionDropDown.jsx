@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
-function PositionSelect() {
-  const [position, setPosition] = useState("");
-
+function PositionSelect({ position, setPosition }) {
   // Define the two position options
   const positions = [
     { label: "Employee", value: "employee" },
@@ -11,7 +9,7 @@ function PositionSelect() {
 
   return (
     <div className="mb-4">
-      <label htmlFor="position" className="block mb-2 text-sm font-medium">
+      <label htmlFor="position" className="block mb-2 text-lg font-medium">
         Position
       </label>
       <select

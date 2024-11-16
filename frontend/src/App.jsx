@@ -42,7 +42,7 @@ const App = () => {
 
     return (
         <Router>
-            <div className="flex flex-col h-screen overflow-hidden">
+            <div className="flex flex-col h-screen">
                 {isLoggedIn && <Navbar />}
                 <div className="flex flex-1">
                     {isLoggedIn && <Sidebar />}
