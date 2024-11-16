@@ -59,10 +59,9 @@ class SignupView(APIView):
                     "access_token",
                     str(refresh.access_token),
                     samesite="Strict",
-                    httponly=True,
                 )
                 response.set_cookie(
-                    "refresh_token", str(refresh), samesite="Strict", httponly=True
+                    "refresh_token", str(refresh), samesite="Strict"
                 )
                 print(
                     f"access tokens: {str(refresh.access_token)}, =>  Refresh: {str(refresh)}",
@@ -95,10 +94,9 @@ class LoginView(APIView):
                     "access_token",
                     str(refresh.access_token),
                     samesite="Strict",
-                    httponly=True,
                 )
                 response.set_cookie(
-                    "refresh_token", str(refresh), samesite="Strict", httponly=True
+                    "refresh_token", str(refresh), samesite="Strict"
                 )
                 employee.last_login = timezone.now()
                 employee.save()

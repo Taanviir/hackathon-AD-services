@@ -24,13 +24,14 @@ function Login() {
       });
       if (response.ok) {
         navigate('/');
-        console.log(data);
+      } else {
+        throw new Error('Login failed');
       }
-      throw new Error("error login in");
       
     } catch (error) {
-      setErrorMessage(errorData.detail || "Signup failed!"); // Set error message from response
-      setSuccessMessage(""); // Clear success message
+      console.error(error);
+      // setErrorMessage(errorData.detail || "Signup failed!"); // Set error message from response
+      // setSuccessMessage(""); // Clear success message
     }
   };
 
