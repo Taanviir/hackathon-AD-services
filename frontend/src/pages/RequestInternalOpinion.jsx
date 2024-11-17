@@ -50,9 +50,15 @@ const RequestInternalOpinion = () => {
     }
 
     // get method - for testing
-    // const get_response = await fetch("http://localhost:8000/api/opinion_request/");
-    // const get_data = await get_response.json();
-    // console.log("get_data:", get_data);
+    const get_response = await fetch("http://localhost:8000/api/opinion_request/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    const get_data = await get_response.json();
+    console.table("All Opinion Requests:", get_data);
   };
 
   return (
