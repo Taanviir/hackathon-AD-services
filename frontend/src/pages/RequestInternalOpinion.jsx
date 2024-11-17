@@ -17,16 +17,12 @@ const RequestInternalOpinion = () => {
     e.preventDefault();
     console.log("Submitting request...");
 
-    const data =   {
+    const data = {
       "title": requestTitle,
       "description": requestDescription,
       "deadline": new Date(dueDate).toISOString(),
       "priority": priorityLevel || "medium"
     }
-
-    // if (data.priority === "") {
-    //   data.priority = "medium";
-    // }
 
     console.table(data)
 
@@ -42,28 +38,23 @@ const RequestInternalOpinion = () => {
 
       console.log("response:", response);
       if (response.ok) {
-        // navigate('/');
-        console.log("submited successful!");
+          setResponseMessage("Request submitted successfully!");
+          console.log("submited successful!");
       } else {
-        console.error("submisson failed:");
-        throw new Error("Submission failed");
+          console.error("submisson failed:");
+          throw new Error(`HTTP error! status: ${response.status}`);
       }
     } catch (error) {
       console.error("An error occurred:", error);
+      setResponseMessage("An error occurred while submitting the request.");
     }
 
     // get method - for testing
-    const response = await fetch("http://localhost:8000/api/opinion_request/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    const responseData = await response.json();
-    console.log("responseData:", responseData);
+    // const get_response = await fetch("http://localhost:8000/api/opinion_request/");
+    // const get_data = await get_response.json();
+    // console.log("get_data:", get_data);
   };
+
   return (
     <div className="flex flex-col justify-center h-full overflow-hidden">
       <h1 className="text-3xl font-bold mb-4 relative left-80 ms-24">
@@ -116,9 +107,9 @@ const RequestInternalOpinion = () => {
               className="mt-1 block w-[500px] h-[150px] rounded-[4px] bg-[rgba(191,186,174,0.72)] p-2 placeholder-[#695D3C]"
             />
           </div>
-          <PriorityLevelSelector 
-            priorityLevel={priorityLevel} 
-            setPriorityLevel={setPriorityLevel} 
+          <PriorityLevelSelector
+            priorityLevel={priorityLevel}
+            setPriorityLevel={setPriorityLevel}
           />
           <div className="flex flex-col">
             <div
