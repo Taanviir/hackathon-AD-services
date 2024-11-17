@@ -1,4 +1,3 @@
-// src/pages/SubmitInternalOpinion.jsx
 import React, { useState } from "react";
 import PriorityLevelSelector from "../components/PriorityLevelSelector";
 
@@ -8,6 +7,7 @@ const RequestInternalOpinion = () => {
   const [priorityLevel, setPriorityLevel] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [file, setFile] = useState(null);
+  const [responseMessage, setResponseMessage] = useState("");
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -25,7 +25,7 @@ const RequestInternalOpinion = () => {
 
     // Create a FormData object to send the data
     const formData = new FormData();
-    formData.append("request_title", requestTitle);
+ formData.append("request_title", requestTitle);
     formData.append("request_description", requestDescription);
     formData.append("priority_level", priorityLevel);
     formData.append("due_date", dueDate);
@@ -63,7 +63,7 @@ const RequestInternalOpinion = () => {
 
   return (
     <div className="flex flex-col justify-center h-full overflow-hidden">
-      <h1 className="text-3xl font-bold mb-4 relative left-80 ms-10">
+      <h1 className="text-3xl font-bold mb-4 relative left-80 ms-24">
         Request Internal Opinion
       </h1>
 
@@ -113,7 +113,10 @@ const RequestInternalOpinion = () => {
               className="mt-1 block w-[500px] h-[150px] rounded-[4px] bg-[rgba(191,186,174,0.72)] p-2 placeholder-[#695D3C]"
             />
           </div>
-          <PriorityLevelSelector />
+          <PriorityLevelSelector 
+            priorityLevel={priorityLevel} 
+            setPriorityLevel={setPriorityLevel} 
+          />
           <div className="flex flex-col">
             <div
               className="mt-5 w-[300px] h-[100px] flex-shrink-0 rounded-[4px] bg-[rgba(191,186,174,0.72)] flex flex-col items-center justify-center cursor-pointer"
