@@ -15,6 +15,42 @@ const InternalOpinionRequestForm = () => {
         setError('');
         setSuccess('');
 
+        const data = {
+            title,
+            description,
+            target_department: requestType,
+            priority: priorityLevel,
+            deadline: dueDate,
+        };
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.log('Submitting request:');
+        console.table(data);
+        console.log('#################');
         try {
             const response = await fetch('http://localhost:8000/api/opinion_request/', {
                 method: 'POST',
@@ -33,9 +69,10 @@ const InternalOpinionRequestForm = () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
+                console.log('Error while Request submission!');
                 throw new Error(errorData.detail || 'An error occurred');
             }
-
+            console.log('Request submitted successfully!');
             setSuccess('Request submitted successfully!');
         } catch (err) {
             setError('Submission failed: ' + err.message);

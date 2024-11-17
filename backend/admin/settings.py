@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     # auth app
     "em_auth",
     "opinion_requests",
-    "research",
 ]
 
 MIDDLEWARE = [
@@ -274,3 +273,6 @@ LOGGING = {
         "level": "DEBUG",
     },
 }
+
+# media files settings
+MEDIA_URL = "/media/"

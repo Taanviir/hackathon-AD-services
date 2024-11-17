@@ -20,7 +20,7 @@ class OpinionRequest(models.Model):
         Employee, on_delete=models.CASCADE
     )  # the one who submitted the request
     target_department = models.CharField(
-        max_length=150, blank=False
+        max_length=150, blank=True, null=True, default="NOT ASSIGNED"
     )  # the department the request is going to
     title = models.CharField(max_length=150, blank=False)
     description = models.TextField(blank=False)
@@ -40,10 +40,11 @@ class OpinionRequest(models.Model):
         ("pending", "Pending"),
         ("fullfilled", "Fullfilled"),
     ]
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="submitted")
     assigned_to = models.ForeignKey(
         Employee, on_delete=models.CASCADE, related_name="assigned_to", null=True
     )
+    resources = models.FileField(upload_to="resources/", null=True, blank=True)
 
     class Meta:
         db_table = "opinion_requests"
