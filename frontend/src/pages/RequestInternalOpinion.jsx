@@ -1,13 +1,13 @@
-// src/pages/SubmitInternalOpinion.jsx
 import React, { useState } from "react";
 import PriorityLevelSelector from "../components/PriorityLevelSelector";
 
-const SubmitInternalOpinion = () => {
+const RequestInternalOpinion = () => {
   const [requestTitle, setRequestTitle] = useState("");
   const [requestDescription, setRequestDescription] = useState("");
   const [priorityLevel, setPriorityLevel] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [file, setFile] = useState(null);
+  const [responseMessage, setResponseMessage] = useState("");
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -52,9 +52,9 @@ const SubmitInternalOpinion = () => {
     }
 
     // get method - for testing
-    const get_response = await fetch("http://localhost:8000/api/opinion_request/");
-    const get_data = await get_response.json();
-    console.log("get_data:", get_data);
+    // const get_response = await fetch("http://localhost:8000/api/opinion_request/");
+    // const get_data = await get_response.json();
+    // console.log("get_data:", get_data);
 
   };
   //   const handleSubmit = async (e) => {
@@ -79,11 +79,11 @@ const SubmitInternalOpinion = () => {
 
   return (
     <div className="flex flex-col justify-center h-full overflow-hidden">
-      <h1 className="text-3xl font-bold mb-4 relative left-80 ms-10">
-        Submit Internal Opinion Request
+      <h1 className="text-3xl font-bold mb-4 relative left-80 ms-24">
+        Request Internal Opinion
       </h1>
 
-      <div className="w-[30vw] h-[71vh] flex-shrink-0 rounded-[20px] bg-[rgba(255,255,255,0.56)] p-6 relative left-80">
+      <div className="w-[550px] h-[730px] flex-shrink-0 rounded-[20px] bg-[rgba(255,255,255,0.56)] p-6 relative left-80">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
@@ -110,7 +110,7 @@ const SubmitInternalOpinion = () => {
           <div>
             <label
               htmlFor="requestDescription"
-              className="block"
+              className="block mt-5"
               style={{
                 color: "#695D3C",
                 fontSize: "20px",
@@ -126,14 +126,17 @@ const SubmitInternalOpinion = () => {
               placeholder="Provide a detailed description of your request, including any specific requirements or context..."
               required
               rows="4"
-              className="mt-1 block w-[508px] h-[151.649px] rounded-[4px] bg-[rgba(191,186,174,0.72)] p-2 placeholder-[#695D3C]"
+              className="mt-1 block w-[500px] h-[150px] rounded-[4px] bg-[rgba(191,186,174,0.72)] p-2 placeholder-[#695D3C]"
             />
           </div>
-          <PriorityLevelSelector />
+          <PriorityLevelSelector 
+            priorityLevel={priorityLevel} 
+            setPriorityLevel={setPriorityLevel} 
+          />
           <div className="flex flex-col">
             <div
-              className="w-[309px] h-[104px] flex-shrink-0 rounded-[4px] bg-[rgba(191,186,174,0.72)] flex flex-col items-center justify-center cursor-pointer"
-              onClick={() => document.getElementById("fileUpload").click()} // Trigger file input on click
+              className="mt-5 w-[300px] h-[100px] flex-shrink-0 rounded-[4px] bg-[rgba(191,186,174,0.72)] flex flex-col items-center justify-center cursor-pointer"
+              onClick={() => document.getElementById("fileUpload").click()}
             >
               <span
                 style={{
@@ -171,7 +174,7 @@ const SubmitInternalOpinion = () => {
           <div>
             <label
               htmlFor="dueDate"
-              className="block"
+              className="block mt-5"
               style={{
                 color: "#695D3C",
                 fontSize: "20px",
@@ -187,13 +190,13 @@ const SubmitInternalOpinion = () => {
               onChange={(e) => setDueDate(e.target.value)}
               min={new Date().toISOString().split("T")[0]}
               required
-              className="mt-1 block w-[50%] h-[39px] rounded-[4px] bg-[rgba(191,186,174,0.72)] p-2"
+              className="block w-[250px] h-[40px] rounded-[4px] bg-[rgba(191,186,174,0.72)] p-2"
             />
           </div>
-          <div className="flex justify-end me-5">
+          <div className="flex justify-center">
             <button
               type="submit"
-              className="mt-4 w-[20%] py-2 bg-gold-900 text-white rounded-lg hover:bg-gold-700 transition duration-200"
+              className="mt-10 w-full py-2 bg-gold-900 text-white rounded-lg hover:bg-gold-700 transition duration-200"
             >
               Submit
             </button>
@@ -204,4 +207,4 @@ const SubmitInternalOpinion = () => {
   );
 };
 
-export default SubmitInternalOpinion;
+export default RequestInternalOpinion;
