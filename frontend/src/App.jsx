@@ -6,6 +6,9 @@ import Home from './pages/Home';
 import SubmitInternalOpinion from './pages/SubmitInternalOpinion';
 import Sidebar from './components/Sidebar';
 
+// development
+import Test from './pages/Test';
+
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -47,6 +50,8 @@ const App = () => {
                                 path="/submit-internal-opinion"
                                 element={isLoggedIn ? <SubmitInternalOpinion /> : <Navigate to="/login" />}
                             />
+                            {/* development page */}
+                            <Route path="/test" element={<Test />} />
                         </Routes>
                     </div>
                 </div>
