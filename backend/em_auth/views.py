@@ -70,6 +70,7 @@ class SignupView(APIView):
                 {"error_message": "Couldn't register the empolyee"},
                 status=status.HTTP_422_UNPROCESSABLE_ENTITY,
             )
+        print("serializer errors: ", serializer.errors, flush=True)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

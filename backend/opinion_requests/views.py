@@ -109,15 +109,14 @@ def extract_text_from_file(file_path):
 
 
 class OpinionRequestViewSet(viewsets.ViewSet):
-    authentication_classes = []
-    permission_classes = []
-    # authentication_classes = [JWTCookieAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTCookieAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def list(self, request):
-        queryset = OpinionRequest.objects.all()
-        serializer = OpinionRequestSerializer(queryset, many=True)
-        print("List of opinion requests", flush=True)
+        my_request_qs = OpinionRequest.objects.all().filter(requester=request.user).order_by("-created_at")
+        requests_to_my_dpt = OpinionRequest.objects.all().filter(target_department=request.user.target_department)
+        serializer = OpinionRequestSerializer(my_request_qs, many=True)
+        print("List of opinion requests: ", serializer.data, flush=True)
         return Response(serializer.data)
 
     def create(self, request):
@@ -155,7 +154,7 @@ class OpinionRequestViewSet(viewsets.ViewSet):
             serializer = OpinionRequestSerializer(data=request.data)
             if serializer.is_valid():
                 # Pass the user explicitly as 'requester'
-                emp_id = Employee.objects.all()[0]
+                emp_id = Employee.objects.all().filter(email=request.user.email).id
                 print(request.user, flush=True)
                 serializer.save(
                     requester=emp_id, department=department

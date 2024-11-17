@@ -273,3 +273,6 @@ LOGGING = {
         "level": "DEBUG",
     },
 }
+
+# media files settings
+MEDIA_URL = "/media/"
