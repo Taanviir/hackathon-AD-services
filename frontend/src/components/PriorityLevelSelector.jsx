@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const PriorityLevelSelector = () => {
-    const [priorityLevel, setPriorityLevel] = useState('');
-
+const PriorityLevelSelector = ({ priorityLevel, setPriorityLevel }) => {
     return (
         <div>
             <h2
