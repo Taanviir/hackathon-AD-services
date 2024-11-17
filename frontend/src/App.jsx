@@ -6,6 +6,9 @@ import Home from './pages/Home';
 import SubmitInternalOpinion from './pages/SubmitInternalOpinion';
 import Sidebar from './components/Sidebar';
 
+// development
+import Test from './pages/Test';
+
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -37,16 +40,18 @@ const App = () => {
                     {isLoggedIn && <Sidebar />}
                     <div className="flex-1 p-8">
                         <Routes>
-                            <Route path="/login" element={isLoggedIn ? <Home /> : <Login onLogin={handleLogin} />} />
+                            <Route path="/login" element={isLoggedIn ? <Navigate to="/" /> : <Login onLogin={handleLogin} />} />
                             <Route
                                 path="/"
                                 element={isLoggedIn ? <Home /> : <Navigate to="/login" />}
                             />
-                            <Route path="/signup" element={isLoggedIn ? <Home /> : <Signup />} />
+                            <Route path="/signup" element={isLoggedIn ? <Navigate to="/" /> : <Signup />} />
                             <Route
                                 path="/submit-internal-opinion"
                                 element={isLoggedIn ? <SubmitInternalOpinion /> : <Navigate to="/login" />}
                             />
+                            {/* development page */}
+                            <Route path="/test" element={<Test />} />
                         </Routes>
                     </div>
                 </div>
