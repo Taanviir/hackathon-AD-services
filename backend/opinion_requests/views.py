@@ -77,7 +77,7 @@ class OpinionRequestViewSet(viewsets.ViewSet):
 
     def list(self, request):
         my_request_qs = OpinionRequest.objects.all().filter(requester=request.user).order_by("-created_at")
-        requests_to_my_dpt = OpinionRequest.objects.all().filter(target_department=request.user.target_department)
+        requests_to_my_dpt = OpinionRequest.objects.all().filter(target_department=request.user.department)
         serializer = OpinionRequestSerializer(my_request_qs, many=True)
         print("List of opinion requests: ", serializer.data, flush=True)
         return Response(serializer.data)

@@ -42,6 +42,7 @@ const RequestInternalOpinion = () => {
 
       console.log("response:", response);
       if (response.ok) {
+        // navigate('/');
         console.log("submited successful!");
       } else {
         console.error("submisson failed:");
@@ -52,31 +53,17 @@ const RequestInternalOpinion = () => {
     }
 
     // get method - for testing
-    // const get_response = await fetch("http://localhost:8000/api/opinion_request/");
-    // const get_data = await get_response.json();
-    // console.log("get_data:", get_data);
+    const response = await fetch("http://localhost:8000/api/opinion_request/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
 
+    const responseData = await response.json();
+    console.log("responseData:", responseData);
   };
-  //   const handleSubmit = async (e) => {
-  //     e.preventDefault();
-
-  //     // Create a FormData object to send the data
-
-  //     // Reset the form fields
-  //     setRequestTitle("");
-  //     setRequestDescription("");
-  //     setPriorityLevel("");
-  //     setDueDate("");
-  //     setFile(null);
-  //   };
-
-  //   setRequestTitle("");
-  //   setRequestDescription("");
-  //   setPriorityLevel("");
-  //   setDueDate("");
-  //   setFile(null);
-  // };
-
   return (
     <div className="flex flex-col justify-center h-full overflow-hidden">
       <h1 className="text-3xl font-bold mb-4 relative left-80 ms-24">
