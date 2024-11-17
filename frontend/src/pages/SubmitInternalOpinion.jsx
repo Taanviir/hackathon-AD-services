@@ -51,15 +51,13 @@ const SubmitInternalOpinion = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json(); // Parse the JSON response
+        const data = await response.json();
         setResponseMessage("Request submitted successfully!");
-        console.log(data); // Log the response data for debugging
+        console.log(data);
       } catch (error) {
         console.error("Error submitting the request:", error);
         setResponseMessage("An error occurred while submitting the request.");
       }
-
-      // Reset the form fields
       setRequestTitle("");
       setRequestDescription("");
       setPriorityLevel("");

@@ -37,12 +37,12 @@ const App = () => {
                     {isLoggedIn && <Sidebar />}
                     <div className="flex-1 p-8">
                         <Routes>
-                            <Route path="/login" element={isLoggedIn ? <Home /> : <Login onLogin={handleLogin} />} />
+                            <Route path="/login" element={isLoggedIn ? <Navigate to="/" /> : <Login onLogin={handleLogin} />} />
                             <Route
                                 path="/"
                                 element={isLoggedIn ? <Home /> : <Navigate to="/login" />}
                             />
-                            <Route path="/signup" element={isLoggedIn ? <Home /> : <Signup />} />
+                            <Route path="/signup" element={isLoggedIn ? <Navigate to="/" /> : <Signup />} />
                             <Route
                                 path="/submit-internal-opinion"
                                 element={isLoggedIn ? <SubmitInternalOpinion /> : <Navigate to="/login" />}
