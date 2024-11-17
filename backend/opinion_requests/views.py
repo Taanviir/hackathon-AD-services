@@ -113,8 +113,16 @@ class OpinionRequestViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
 
     def list(self, request):
-        my_request_qs = OpinionRequest.objects.all().filter(requester=request.user).order_by("-created_at")
-        requests_to_my_dpt = OpinionRequest.objects.all().filter(target_department=request.user.department)
+        my_request_qs = (
+            OpinionRequest.objects.all()
+            .filter(requester=request.user)
+            .order_by("-created_at")
+        )
+        requests_to_my_dpt = (
+            OpinionRequest.objects.all()
+            .filter(target_department=request.user.department)
+            .order_by("-created_at")
+        )
         serializer = OpinionRequestSerializer(my_request_qs, many=True)
         print("List of opinion requests: ", serializer.data, flush=True)
         return Response(serializer.data)
@@ -154,15 +162,9 @@ class OpinionRequestViewSet(viewsets.ViewSet):
             serializer = OpinionRequestSerializer(data=request.data)
             if serializer.is_valid():
                 # Pass the user explicitly as 'requester'
-                emp_id = Employee.objects.all().filter(email=request.user.email).id
-                print(request.user, flush=True)
-                serializer.save(
-                    requester=emp_id, department=department
-                )  # Save the department classification
-                return Response(
-                    {"department": department, "opinion_request": serializer.data},
-                    status=status.HTTP_201_CREATED,
-                )
+                emp = Employee.objects.get(email=request.user.email)
+                serializer.save(requester=emp, target_department=department)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
