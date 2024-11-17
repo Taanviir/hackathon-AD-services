@@ -1,6 +1,6 @@
 import openai
 import PyPDF2
-# import docx
+import docx
 import pandas as pd
 import pytesseract
 import mimetypes

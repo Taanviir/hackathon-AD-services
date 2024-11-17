@@ -15,6 +15,6 @@ requests
 beautifulsoup4
 black
 PyPDF2
-docx
+python-docx
 pytesseract
 pillow
