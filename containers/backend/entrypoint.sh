@@ -8,7 +8,7 @@ black .
 
 # Run migrations
 echo "Running database migrations..."
-python manage.py makemigrations em_auth opinion_requests research
+python manage.py makemigrations em_auth opinion_requests
 python manage.py migrate
 
 # Start the Django server

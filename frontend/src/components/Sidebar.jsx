@@ -26,38 +26,36 @@ const Sidebar = () => {
       </div>
       <div className="my-5 w-full h-[2px] bg-[#695D3C]"></div>
       <ul className="space-y-4 ms-1">
-        {location.pathname === "/" ? (
-          <li className="text-lg font-semibold mt-5 ms-1">
-            <Link
-              to="/submit-internal-opinion"
-              className={`block py-2 px-4 text-left text-gold-900 transition duration-200 ease-in-out border border-transparent hover:bg-[rgba(158,146,96,0.4)] hover:text-white rounded ${
-                isCollapsed ? "text-center" : ""
-              }`}
-            >
-              {isCollapsed ? "" : "Submit Internal Opinion Request"}
-            </Link>
-          </li>
-        ) : (
-          <li className="text-lg font-semibold mt-5 ms-1">
-            <Link
-              to="/"
-              className={`block py-2 px-4 text-left text-gold-900 transition duration-200 ease-in-out border border-transparent hover:bg-[rgba(158,146,96,0.4)] hover:text-white rounded ${
-                isCollapsed ? "text-center" : ""
-              }`}
-            >
-              {isCollapsed ? "" : "Home"}
-            </Link>
-          </li>
-        )}
-        <div className="w-full h-[2px] bg-[#695D3C]"></div>
-        <li className="text-lg font-semibold ms-1">
+        <li className="text-lg font-semibold mt-5 ms-1">
           <Link
-            to="/history"
+            to="/"
             className={`block py-2 px-4 text-left text-gold-900 transition duration-200 ease-in-out border border-transparent hover:bg-[rgba(158,146,96,0.4)] hover:text-white rounded ${
               isCollapsed ? "text-center" : ""
             }`}
           >
-            {isCollapsed ? "" : "History"}
+            {isCollapsed ? "" : "Home"}
+          </Link>
+        </li>
+        <div className="w-full h-[2px] bg-[#695D3C]"></div>
+        <li className="text-lg font-semibold ms-1">
+          <Link
+            to="/research"
+            className={`block py-2 px-4 text-left text-gold-900 transition duration-200 ease-in-out border border-transparent hover:bg-[rgba(158,146,96,0.4)] hover:text-white rounded ${
+              isCollapsed ? "text-center" : ""
+            }`}
+          >
+            {isCollapsed ? "" : "Research"}
+          </Link>
+        </li>
+        <div className="w-full h-[2px] bg-[#695D3C]"></div>
+        <li className="text-lg font-semibold ms-1">
+          <Link
+            to="/request-internal-opinion"
+            className={`block py-2 px-4 text-left text-gold-900 transition duration-200 ease-in-out border border-transparent hover:bg-[rgba(158,146,96,0.4)] hover:text-white rounded ${
+              isCollapsed ? "text-center" : ""
+            }`}
+          >
+            {isCollapsed ? "" : "Request Internal Opinion"}
           </Link>
         </li>
         <div className="w-full h-[2px] bg-[#695D3C]"></div>

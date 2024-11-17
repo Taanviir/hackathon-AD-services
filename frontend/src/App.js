@@ -9,7 +9,7 @@ function App() {
     const handleDocumentSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:8000/api/process_document/", {
+            const response = await fetch("http://localhost:8000/api/opinion_request/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
