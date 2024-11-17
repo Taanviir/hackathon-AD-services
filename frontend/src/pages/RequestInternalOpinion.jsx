@@ -23,48 +23,37 @@ const RequestInternalOpinion = () => {
       file,
     });
 
-    const handleSubmit = async (e) => {
-      e.preventDefault();
+    // Create a FormData object to send the data
+    const formData = new FormData();
+    formData.append("request_title", requestTitle);
+    formData.append("request_description", requestDescription);
+    formData.append("priority_level", priorityLevel);
+    formData.append("due_date", dueDate);
+    if (file) {
+      formData.append("file", file);
+    }
 
-      // Create a FormData object to send the data
-      const formData = new FormData();
-      formData.append("request_title", requestTitle);
-      formData.append("request_description", requestDescription);
-      formData.append("priority_level", priorityLevel);
-      formData.append("due_date", dueDate);
-      if (file) {
-        formData.append("file", file);
-      }
-
-      try {
-        const response = await fetch(
-          "http://localhost:8000/api/opinion_request/",
-          {
-            method: "POST",
-            body: formData,
-            headers: {
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+    try {
+      const response = await fetch(
+        "http://localhost:8000/api/opinion_request/",
+        {
+          method: "POST",
+          body: formData,
+          headers: {},
         }
+      );
 
-        const data = await response.json();
-        setResponseMessage("Request submitted successfully!");
-        console.log(data);
-      } catch (error) {
-        console.error("Error submitting the request:", error);
-        setResponseMessage("An error occurred while submitting the request.");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      setRequestTitle("");
-      setRequestDescription("");
-      setPriorityLevel("");
-      setDueDate("");
-      setFile(null);
-    };
 
+      const data = await response.json();
+      setResponseMessage("Request submitted successfully!");
+      console.log(data);
+    } catch (error) {
+      console.error("Error submitting the request:", error);
+      setResponseMessage("An error occurred while submitting the request.");
+    }
     setRequestTitle("");
     setRequestDescription("");
     setPriorityLevel("");
@@ -124,7 +113,7 @@ const RequestInternalOpinion = () => {
               className="mt-1 block w-[500px] h-[150px] rounded-[4px] bg-[rgba(191,186,174,0.72)] p-2 placeholder-[#695D3C]"
             />
           </div>
-          <PriorityLevelSelector/>
+          <PriorityLevelSelector />
           <div className="flex flex-col">
             <div
               className="mt-5 w-[300px] h-[100px] flex-shrink-0 rounded-[4px] bg-[rgba(191,186,174,0.72)] flex flex-col items-center justify-center cursor-pointer"
