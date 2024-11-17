@@ -38,7 +38,7 @@ const InfoBox = ({ text, value }) => {
   };
 
   return (
-    <div style={InfoBoxStyle} className="px-6 my-4">
+    <div style={InfoBoxStyle} className="px-6">
       <span style={textStyle}>{text}</span>
       <div className="px-5">
         <div style={dividerStyle}></div>

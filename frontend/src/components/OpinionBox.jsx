@@ -6,7 +6,7 @@ const OpinionBox = ({ description, dueDate, priorityLevel }) => {
       
       {/* Description Section */}
       <div className="pb-4 text-center text-gold-900 border-b border-gold-800">
-        <p className="text-sm uppercase font-semibold text-gold-800">Title</p>
+        <p className="text-lg uppercase font-semibold text-gold-800">Title</p>
         <p className="mt-2 text-gold-800">
           {description}
         </p>
@@ -16,18 +16,17 @@ const OpinionBox = ({ description, dueDate, priorityLevel }) => {
       <div className="pb-4 text-center text-gold-800 border-b border-gold-800">
         <p className="mt-2 text-sm uppercase font-semibold text-gold-800">Due Date</p>
         <p className="text-gold-800">
-          <strong>{dueDate}</strong>
+          {dueDate}
         </p>
       </div>
 
       <div className="pb-4 text-center text-gold-800 border-b border-gold-800">
         <p className="mt-2 text-sm uppercase font-semibold text-gold-800">Priority Level</p>
         <p className="text-gold-800">
-          <strong>{priorityLevel}</strong>
+          {priorityLevel}
         </p>
       </div>
 
-      {/* Open Form Section */}
       <div className="p-0">
         <form>
           <button
