@@ -15,24 +15,20 @@ const SubmitInternalOpinion = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({
-      requestTitle,
-      requestDescription,
-      priorityLevel,
-      dueDate,
-      file,
-    });
-
     console.log("Submitting request...");
 
-    const formData = new FormData();
-    formData.append("title", requestTitle);
-    formData.append("description", requestDescription);
-    formData.append("priority", priorityLevel);
-    formData.append("deadline", dueDate);
-    if (file) {
-      formData.append("file", file);
+    const data =   {
+      "title": requestTitle,
+      "description": requestDescription,
+      "deadline": new Date(dueDate).toISOString(),
+      "priority": priorityLevel || "medium"
     }
+
+    // if (data.priority === "") {
+    //   data.priority = "medium";
+    // }
+
+    console.table(data)
 
     try {
       const response = await fetch("http://localhost:8000/api/opinion_request/", {
@@ -40,19 +36,26 @@ const SubmitInternalOpinion = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(data),
         credentials: "include",
       });
 
+      console.log("response:", response);
       if (response.ok) {
         console.log("submited successful!");
       } else {
-        console.error("submisson failed:", errorData.detail);
+        console.error("submisson failed:");
         throw new Error("Submission failed");
       }
     } catch (error) {
       console.error("An error occurred:", error);
     }
+
+    // get method - for testing
+    const get_response = await fetch("http://localhost:8000/api/opinion_request/");
+    const get_data = await get_response.json();
+    console.log("get_data:", get_data);
+
   };
   //   const handleSubmit = async (e) => {
   //     e.preventDefault();

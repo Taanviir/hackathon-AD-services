@@ -14,11 +14,8 @@ class Employee(AbstractUser):
     username = None  # Remove username field
     first_name = None  # Remove first_name field
     last_name = None  # Remove last_name field
-    last_login = None
     is_superuser = None
     is_staff = None
-    is_active = None
-    date_joined = None
 
     class Meta:
         db_table = "employee"

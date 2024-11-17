@@ -17,11 +17,11 @@ class OpinionRequestSerializer(serializers.ModelSerializer):
             "priority",
             "status",
             "assigned_to",
+            "resources",
         ]
         extra_kwargs = {
             "title": {"required": True},
             "description": {"required": True},
-            "target_department": {"required": True},
             "priority": {"required": True},
             "deadline": {"required": True},
         }

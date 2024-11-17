@@ -9,6 +9,7 @@ from .serializers import OpinionRequestSerializer
 from rest_framework import viewsets
 from .models import OpinionRequest
 from em_auth.models import Employee
+from django.utils import timezone
 
 
 # Configure OpenAI API Key
@@ -71,25 +72,22 @@ class DocumentProcessingView(APIView):
 
 
 class OpinionRequestViewSet(viewsets.ViewSet):
-    authentication_classes = []
-    permission_classes = []
-    # authentication_classes = [JWTCookieAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTCookieAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def list(self, request):
-        queryset = OpinionRequest.objects.all()
-        serializer = OpinionRequestSerializer(queryset, many=True)
-        print("List of opinion requests", flush=True)
+        my_request_qs = OpinionRequest.objects.all().filter(requester=request.user).order_by("-created_at")
+        requests_to_my_dpt = OpinionRequest.objects.all().filter(target_department=request.user.target_department)
+        serializer = OpinionRequestSerializer(my_request_qs, many=True)
+        print("List of opinion requests: ", serializer.data, flush=True)
         return Response(serializer.data)
 
     def create(self, request):
-        print("Request data: ", request.data, flush=True)
         serializer = OpinionRequestSerializer(data=request.data)
         if serializer.is_valid():
-            # Pass the user explicitly as 'requester'
-            emp_id = Employee.objects.all()[0]
-            print(request.user, flush=True)
-            serializer.save(requester=emp_id)
+            # Get the employee ID from the JWT token
+            emp = Employee.objects.get(email=request.user.email)
+            serializer.save(requester=emp)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
