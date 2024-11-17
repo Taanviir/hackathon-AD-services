@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     # auth app
     "em_auth",
     "opinion_requests",
-    "research",
 ]
 
 MIDDLEWARE = [
