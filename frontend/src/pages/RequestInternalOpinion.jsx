@@ -10,7 +10,7 @@ const RequestInternalOpinion = () => {
   const [responseMessage, setResponseMessage] = useState("");
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    setFile(e.target.files);
   };
 
   const handleSubmit = async (e) => {
@@ -131,6 +131,7 @@ const RequestInternalOpinion = () => {
                 name="file"
                 onChange={handleFileChange}
                 style={{ display: "none" }} // Hide the file input
+                multiple
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
