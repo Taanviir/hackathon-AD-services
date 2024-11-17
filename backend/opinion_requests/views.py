@@ -17,7 +17,6 @@ from .models import OpinionRequest
 from rest_framework.parsers import MultiPartParser, FormParser
 
 
-# Configure OpenAI API Key
 openai.api_key = settings.OPENAI_API_KEY
 
 DEPARTMENTS = [
@@ -51,7 +50,6 @@ Only include departments that are necessary for this project. Ensure the questio
 """
 
     try:
-        # Make a request to the OpenAI API with the new format
         response = openai.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
@@ -62,7 +60,7 @@ Only include departments that are necessary for this project. Ensure the questio
                 {"role": "user", "content": prompt},
             ],
             max_tokens=1000,
-            temperature=0.7,  # Lower temperature for more predictable classification
+            temperature=0.7,  # Controlling model predictability
         )
 
         print('Completion Tokens:', response.usage.completion_tokens)
@@ -104,7 +102,7 @@ def process_file(file_path):
         text = df.to_string(index=False)
     elif mime_type and mime_type.startswith("image/"):
         #TODO: handle image???
-    #     # Extract text from images using OCR
+        # Extract text from images using OCR
     #     image = Image.open(file_path)
         # text = pytesseract.image_to_string(image)  #!
         text = ""
