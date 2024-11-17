@@ -1,0 +1,128 @@
+[
+    {
+        "full_name": "Alice Johnson",
+        "email": "alice.johnson@company.com",
+        "department": "Human Resources",
+        "position": "manager",
+        "password": "123"
+    },
+    {
+        "full_name": "Bob Lee",
+        "email": "bob.lee@company.com",
+        "department": "Human Resources",
+        "position": "employee",
+        "password": "123"
+    },
+    {
+        "full_name": "Charlie Brown",
+        "email": "charlie.brown@company.com",
+        "department": "Engineering",
+        "position": "manager",
+        "password": "123"
+    },
+    {
+        "full_name": "David Smith",
+        "email": "david.smith@company.com",
+        "department": "Engineering",
+        "position": "employee",
+        "password": "123"
+    },
+    {
+        "full_name": "Eva White",
+        "email": "eva.white@company.com",
+        "department": "Marketing",
+        "position": "manager",
+        "password": "123"
+    },
+    {
+        "full_name": "Frank Green",
+        "email": "frank.green@company.com",
+        "department": "Marketing",
+        "position": "employee",
+        "password": "123"
+    },
+    {
+        "full_name": "Grace Black",
+        "email": "grace.black@company.com",
+        "department": "Sales",
+        "position": "manager",
+        "password": "123"
+    },
+    {
+        "full_name": "Henry Davis",
+        "email": "henry.davis@company.com",
+        "department": "Sales",
+        "position": "employee",
+        "password": "123"
+    },
+    {
+        "full_name": "Ivy Walker",
+        "email": "ivy.walker@company.com",
+        "department": "Finance",
+        "position": "manager",
+        "password": "123"
+    },
+    {
+        "full_name": "Jack Turner",
+        "email": "jack.turner@company.com",
+        "department": "Finance",
+        "position": "employee",
+        "password": "123"
+    },
+    {
+        "full_name": "Kathy Adams",
+        "email": "kathy.adams@company.com",
+        "department": "Customer Support",
+        "position": "manager",
+        "password": "123"
+    },
+    {
+        "full_name": "Liam Mitchell",
+        "email": "liam.mitchell@company.com",
+        "department": "Customer Support",
+        "position": "employee",
+        "password": "123"
+    },
+    {
+        "full_name": "Mona King",
+        "email": "mona.king@company.com",
+        "department": "IT",
+        "position": "manager",
+        "password": "123"
+    },
+    {
+        "full_name": "Nathan Scott",
+        "email": "nathan.scott@company.com",
+        "department": "IT",
+        "position": "employee",
+        "password": "123"
+    },
+    {
+        "full_name": "Olivia Wright",
+        "email": "olivia.wright@company.com",
+        "department": "Product",
+        "position": "manager",
+        "password": "123"
+    },
+    {
+        "full_name": "Paul Harris",
+        "email": "paul.harris@company.com",
+        "department": "Product",
+        "position": "employee",
+        "password": "123"
+    },
+    {
+        "full_name": "Quincy Martin",
+        "email": "quincy.martin@company.com",
+        "department": "Legal",
+        "position": "manager",
+        "password": "123"
+    },
+    {
+        "full_name": "Rachel Clark",
+        "email": "rachel.clark@company.com",
+        "department": "Legal",
+        "position": "employee",
+        "password": "123"
+    }
+]

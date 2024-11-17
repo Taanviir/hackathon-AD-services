@@ -29,6 +29,12 @@ fclean: down
 
 rebuild: fclean up
 
+see_emps:
+	docker exec -it app-db psql -U db_user -d hackathon_db -c "select * from employee;"
+
+see_ors:
+	docker exec -it app-db psql -U db_user -d hackathon_db -c "select * from opinion_requests;"
+
 # Help
 help:
 	@echo "Makefile commands:"
