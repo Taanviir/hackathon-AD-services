@@ -1,5 +1,6 @@
-import os
+import re
 import openai
+import os
 import PyPDF2
 import docx
 import pandas as pd
@@ -29,6 +30,60 @@ DEPARTMENTS = [
     "Health",
     "Operations",
 ]
+
+
+def prepare_response(questions):
+    """
+    Transforms a string containing department-specific questions into a JSON format.
+
+    Args:
+        questions (str): A string where departments and their questions are listed in a specific format.
+
+    Returns:
+        list: A list of dictionaries, each representing a department and its questions.
+    """
+    response = []
+    errors = []
+
+    # Split input into blocks based on department headers
+    department_blocks = re.split(r"\*\*Department Name: (.+?)\*\*", questions)
+
+    # Iterate over the blocks, extracting department name and questions
+    for i in range(1, len(department_blocks), 2):
+        department_name = department_blocks[i].strip()
+        question_text = department_blocks[i + 1].strip()
+
+        # Validate department name
+        if not department_name:
+            errors.append("Missing department name in one of the blocks.")
+            continue
+
+        # Extract questions, assuming they are prefixed with '- '
+        question_list = [
+            q.strip("- ").strip()
+            for q in question_text.splitlines()
+            if q.startswith("- ")
+        ]
+
+        # Handle cases with no valid questions
+        if not question_list:
+            errors.append(
+                f"No valid questions found for department '{department_name}'."
+            )
+            continue
+
+        # Append department and its questions to the response
+        response.append(
+            {"department_name": department_name, "questions": question_list}
+        )
+
+    # Check for completely invalid input
+    if not response and not errors:
+        errors.append(
+            "Input does not contain any valid department headers or questions."
+        )
+
+    return response, errors
 
 
 def get_chatgpt_analysis(context):
@@ -63,9 +118,9 @@ Only include departments that are necessary for this project. Ensure the questio
             temperature=0.7,  # Controlling model predictability
         )
 
-        print('Completion Tokens:', response.usage.completion_tokens)
-        print('Prompt Tokens:', response.usage.prompt_tokens)
-        print('Total Tokens:', response.usage.total_tokens)
+        print("Completion Tokens:", response.usage.completion_tokens)
+        print("Prompt Tokens:", response.usage.prompt_tokens)
+        print("Total Tokens:", response.usage.total_tokens)
 
         return response.choices[0].message.content.strip()
     except Exception as e:
@@ -80,7 +135,9 @@ def process_file(file_path):
         # Extract text from PDF
         with open(file_path, "rb") as file:
             reader = PyPDF2.PdfReader(file)
-            text = "\n".join(page.extract_text() for page in reader.pages if page.extract_text())
+            text = "\n".join(
+                page.extract_text() for page in reader.pages if page.extract_text()
+            )
     elif (
         mime_type
         == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -101,9 +158,9 @@ def process_file(file_path):
         df = pd.read_csv(file_path)
         text = df.to_string(index=False)
     elif mime_type and mime_type.startswith("image/"):
-        #TODO: handle image???
+        # TODO: handle image???
         # Extract text from images using OCR
-    #     image = Image.open(file_path)
+        #     image = Image.open(file_path)
         # text = pytesseract.image_to_string(image)  #!
         text = ""
     else:
@@ -166,23 +223,20 @@ class OpinionRequestViewSet(viewsets.ViewSet):
         {'\n\n'.join(extracted_contents)}
         """
 
-        # Call ChatGPT for analysis
         questions = get_chatgpt_analysis(full_context)
-        #TODO: send this questions data as JSON to frontend
-        print("-------------------------------------")
-        print(questions)
-        print("-------------------------------------")
+        response, errors = prepare_response(questions)
 
-        return JsonResponse({"questions": questions}, status=200)
+        # TODO: handle when department_questions is empty
+        # TODO: handle when errors is empty
+        # TODO: serializing needs to be implemented
 
+        return JsonResponse({"departments": response}, status=200)
 
         # Serialize and save the OpinionRequest with department classification
         # serializer = OpinionRequestSerializer(data=request.data)
         # if serializer.is_valid():
         #     # Pass the user explicitly as 'requester'
         #     emp_id = Employee.objects.all().filter(email=request.user.email).id
-        #     emp_id = Employee.objects.all()[0]
-        #     print(request.user, flush=True)
         #     serializer.save(
         #         requester=emp_id, department=department
         #     )  # Save the department classification
