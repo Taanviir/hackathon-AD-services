@@ -17,6 +17,7 @@ const PriorityLevelSelector = ({ priorityLevel, setPriorityLevel }) => {
                     <input
                         type="radio"
                         id="high"
+                        name="priority"
                         value="high"
                         checked={priorityLevel === "high"}
                         onChange={(e) => setPriorityLevel(e.target.value)}
@@ -40,6 +41,7 @@ const PriorityLevelSelector = ({ priorityLevel, setPriorityLevel }) => {
                     <input
                         type="radio"
                         id="medium"
+                        name="priority"
                         value="medium"
                         checked={priorityLevel === "medium"}
                         onChange={(e) => setPriorityLevel(e.target.value)}
@@ -63,6 +65,7 @@ const PriorityLevelSelector = ({ priorityLevel, setPriorityLevel }) => {
                     <input
                         type="radio"
                         id="low"
+                        name="priority"
                         value="low"
                         checked={priorityLevel === "low"}
                         onChange={(e) => setPriorityLevel(e.target.value)}
