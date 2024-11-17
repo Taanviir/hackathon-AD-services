@@ -15,62 +15,67 @@ const SubmitInternalOpinion = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({
-      requestTitle,
-      requestDescription,
-      priorityLevel,
-      dueDate,
-      file,
-    });
+    console.log("Submitting request...");
 
-    const handleSubmit = async (e) => {
-      e.preventDefault();
+    const data =   {
+      "title": requestTitle,
+      "description": requestDescription,
+      "deadline": new Date(dueDate).toISOString(),
+      "priority": priorityLevel || "medium"
+    }
 
-      // Create a FormData object to send the data
-      const formData = new FormData();
-      formData.append("request_title", requestTitle);
-      formData.append("request_description", requestDescription);
-      formData.append("priority_level", priorityLevel);
-      formData.append("due_date", dueDate);
-      if (file) {
-        formData.append("file", file);
+    // if (data.priority === "") {
+    //   data.priority = "medium";
+    // }
+
+    console.table(data)
+
+    try {
+      const response = await fetch("http://localhost:8000/api/opinion_request/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+
+      console.log("response:", response);
+      if (response.ok) {
+        console.log("submited successful!");
+      } else {
+        console.error("submisson failed:");
+        throw new Error("Submission failed");
       }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
 
-      try {
-        const response = await fetch(
-          "http://localhost:8000/api/opinion_request/",
-          {
-            method: "POST",
-            body: formData,
-            headers: {
-            },
-          }
-        );
+    // get method - for testing
+    const get_response = await fetch("http://localhost:8000/api/opinion_request/");
+    const get_data = await get_response.json();
+    console.log("get_data:", get_data);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setResponseMessage("Request submitted successfully!");
-        console.log(data);
-      } catch (error) {
-        console.error("Error submitting the request:", error);
-        setResponseMessage("An error occurred while submitting the request.");
-      }
-      setRequestTitle("");
-      setRequestDescription("");
-      setPriorityLevel("");
-      setDueDate("");
-      setFile(null);
-    };
-
-    setRequestTitle("");
-    setRequestDescription("");
-    setPriorityLevel("");
-    setDueDate("");
-    setFile(null);
   };
+  //   const handleSubmit = async (e) => {
+  //     e.preventDefault();
+
+  //     // Create a FormData object to send the data
+
+  //     // Reset the form fields
+  //     setRequestTitle("");
+  //     setRequestDescription("");
+  //     setPriorityLevel("");
+  //     setDueDate("");
+  //     setFile(null);
+  //   };
+
+  //   setRequestTitle("");
+  //   setRequestDescription("");
+  //   setPriorityLevel("");
+  //   setDueDate("");
+  //   setFile(null);
+  // };
 
   return (
     <div className="flex flex-col justify-center h-full overflow-hidden">
