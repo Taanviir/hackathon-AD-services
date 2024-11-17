@@ -40,7 +40,9 @@ class OpinionRequest(models.Model):
         ("pending", "Pending"),
         ("fullfilled", "Fullfilled"),
     ]
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="submitted")
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default="submitted"
+    )
     assigned_to = models.ForeignKey(
         Employee, on_delete=models.CASCADE, related_name="assigned_to", null=True
     )

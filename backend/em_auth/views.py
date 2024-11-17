@@ -46,7 +46,6 @@ class SignupView(APIView):
         return HttpResponse("Welcome to the sign up page")
 
     def post(self, request):
-        print("we in the signup view: ", request.data, flush=True)
         serializer = EmployeeSignupSerializer(data=request.data)
         if serializer.is_valid():
             new_employee = serializer.save()
@@ -61,10 +60,6 @@ class SignupView(APIView):
                     samesite="Strict",
                 )
                 response.set_cookie("refresh_token", str(refresh), samesite="Strict")
-                print(
-                    f"access tokens: {str(refresh.access_token)}, =>  Refresh: {str(refresh)}",
-                    flush=True,
-                )
                 return response
             return Response(
                 {"error_message": "Couldn't register the empolyee"},
@@ -132,6 +127,6 @@ class SignOutView(View):
 
     -> JWT token pairs are disappearing after a refresh - need to fix this
         * if you set the samesite to None, you need to set the secure to True
-        # and for this we will need to route the traffic through a reverse 
+        # and for this we will need to route the traffic through a reverse
           proxy - nginx using https
 """
