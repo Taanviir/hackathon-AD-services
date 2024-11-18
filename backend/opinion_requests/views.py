@@ -13,14 +13,14 @@ from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 from em_auth.middleware import JWTCookieAuthentication
 from em_auth.models import Employee
-from .serializers import OpinionRequestSerializer
-from .models import OpinionRequest
+from .serializers import *
+from .models import *
 from rest_framework.parsers import MultiPartParser, FormParser
 
 
 openai.api_key = settings.OPENAI_API_KEY
 
-DEPARTMENTS = [
+DEPARTMENT_NAMES = [
     "Finance",
     "Human Resources",
     "Legal",
@@ -43,7 +43,7 @@ def prepare_response(questions):
         list: A list of dictionaries, each representing a department and its questions.
               A list of errors is also returned.
     """
-    response = []
+    departments = []
     errors = []
 
     # Split input into blocks based on department headers
@@ -73,25 +73,25 @@ def prepare_response(questions):
             )
             continue
 
-        # Append department and its questions to the response
-        response.append(
+        # Append department and its questions to the departments
+        departments.append(
             {"department_name": department_name, "questions": question_list}
         )
 
     # Check for completely invalid input
-    if not response and not errors:
+    if not departments and not errors:
         errors.append(
             "Input does not contain any valid department headers or questions."
         )
 
-    return response, errors
+    return departments, errors
 
 
 def get_chatgpt_analysis(context):
     prompt = f"""
 You are an expert in project planning and organizational management. Based on the following project details, generate a list of targeted form questions for different departments to provide their input. Only generate questions for departments that are clearly relevant to the project.
 
-Here are the departments in the company: {DEPARTMENTS}
+Here are the departments in the company: {DEPARTMENT_NAMES}
 
 Project Details:
 {context}
@@ -183,13 +183,12 @@ class OpinionRequestViewSet(viewsets.ViewSet):
             .filter(requester=request.user)
             .order_by("-created_at")
         )
-        requests_to_my_dpt = (
-            OpinionRequest.objects.all()
-            .filter(target_department=request.user.department)
-            .order_by("-created_at")
-        )
+        # requests_to_my_dpt = (
+        #     OpinionRequest.objects.all()
+        #     .filter(target_department=request.user.department)
+        #     .order_by("-created_at")
+        # )
         serializer = OpinionRequestSerializer(my_request_qs, many=True)
-        print("List of opinion requests: ", serializer.data, flush=True)
         return Response(serializer.data)
 
     def create(self, request):
@@ -227,21 +226,36 @@ class OpinionRequestViewSet(viewsets.ViewSet):
         """
 
         questions = get_chatgpt_analysis(full_context)
-        response, errors = prepare_response(questions)
+        departments, errors = prepare_response(questions)
 
-        # TODO: handle when department_questions is empty
-        # TODO: handle when errors is empty
-        # TODO: serializing needs to be implemented
+        if errors:
+            return JsonResponse({"error": errors}, status=400)
+        elif not departments:
+            return JsonResponse(
+                {"error": "No department-specific questions generated."}, status=400
+            )
 
-        # return JsonResponse({"departments": response}, status=200)
 
         # Serialize and save the OpinionRequest with department classification
         serializer = OpinionRequestSerializer(data=request.data)
         if serializer.is_valid():
-            # Pass the user explicitly as 'requester'
             emp = Employee.objects.get(email=request.user.email)
-            serializer.save(requester=emp, target_department=department)
+            opinion_request = serializer.save(requester=emp)
+
+            for department in departments:
+                department["request"] = opinion_request.id
+
+                # Create the target department
+                target_department_serializer = IORTargetDepartmentSerializer(data=department)
+
+                if target_department_serializer.is_valid():
+                    target_department = target_department_serializer.save()
+                    opinion_request.target_departments.add(target_department)
+                else:
+                    return Response(target_department_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
@@ -249,6 +263,7 @@ class OpinionRequestViewSet(viewsets.ViewSet):
             # Retrieve the specific OpinionRequest instance by pk
             opinion_request = OpinionRequest.objects.get(pk=pk)
             serializer = OpinionRequestSerializer(opinion_request)
+            # TODO: retrive all the question and feedbacks for each department - based on the department of the request.user
             return Response(serializer.data)
         except OpinionRequest.DoesNotExist:
             return Response(
