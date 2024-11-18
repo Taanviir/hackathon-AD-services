@@ -19,9 +19,6 @@ class OpinionRequest(models.Model):
     requester = models.ForeignKey(
         Employee, on_delete=models.CASCADE
     )  # the one who submitted the request
-    target_department = models.CharField(
-        max_length=150, blank=True, null=True, default="NOT ASSIGNED"
-    )  # the department the request is going to
     title = models.CharField(max_length=150, blank=False)
     description = models.TextField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -36,18 +33,32 @@ class OpinionRequest(models.Model):
         max_length=20, choices=PRIORITY_CHOICES, default="medium"
     )
     STATUS_CHOICES = [
-        ("submitted", "Submitted"),
-        ("pending", "Pending"),
-        ("fullfilled", "Fullfilled"),
+        ("sent", "Sent"),
+        ("active", "Active"),
+        ("finished", "Finished"),
     ]
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="submitted")
-    assigned_to = models.ForeignKey(
-        Employee, on_delete=models.CASCADE, related_name="assigned_to", null=True
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default="sent"
     )
     resources = models.FileField(upload_to="resources/", null=True, blank=True)
+    target_departments = models.ManyToManyField(
+        "IORTargetDepartment", related_name="target_departments", blank=True)
 
     class Meta:
         db_table = "opinion_requests"
 
     def __str__(self):
-        return f"{self.request_title} - {self.requester} ({self.status})"
+        return f"{self.title} - {self.requester} ({self.status})"
+
+class IORTargetDepartment(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    request = models.ForeignKey(OpinionRequest, on_delete=models.CASCADE)
+    department_name = models.CharField(max_length=150, blank=False)
+    questions = models.JSONField(blank=True, null=True)
+    feedback = models.TextField(blank=True, null=True)
+
+    class Meta:
+        db_table = "ior_target_departments"
+
+    def __str__(self):
+        return f"{self.request} - {self.department_name}"

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import OpinionRequest
+from .models import *
 from django.utils import timezone
 
 
@@ -8,7 +8,6 @@ class OpinionRequestSerializer(serializers.ModelSerializer):
         model = OpinionRequest
         fields = [
             "id",
-            "target_department",
             "title",
             "description",
             "created_at",
@@ -16,8 +15,8 @@ class OpinionRequestSerializer(serializers.ModelSerializer):
             "deadline",
             "priority",
             "status",
-            "assigned_to",
             "resources",
+            "target_departments",
         ]
         extra_kwargs = {
             "title": {"required": True},
@@ -29,4 +28,21 @@ class OpinionRequestSerializer(serializers.ModelSerializer):
     def validate_deadline(self, value):
         if value <= timezone.now():
             raise serializers.ValidationError("The deadline must be a future date.")
+        return value
+
+
+class IORTargetDepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IORTargetDepartment
+        fields = [
+            "id",
+            "request",
+            "department_name",
+            "questions",
+            "feedback",
+        ]
+
+    def validate_questions(self, value):
+        if value and not isinstance(value, list):
+            raise serializers.ValidationError("Questions must be a list of strings.")
         return value
