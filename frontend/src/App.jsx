@@ -42,7 +42,32 @@ const App = () => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    fetch("http://localhost:8000/api/logout/", {
+        method: "GET",
+        credentials: "include",
+    })
+      .then((response) => {
+        if (response.ok) {
+          // If logout is successful, navigate to the login page
+          navigate("/login");
+        } else {
+          console.error("Logout failed");
+        }
+      })
+      .catch((error) => {
+        console.error("An error occurred during logout:", error);
+      });
   };
+
+//   {/* Logout Button */}
+//   <button
+//   onClick={handleLogout}
+//   className={`block bottom-4 left-4 w-[calc(100%-2rem)] py-2 px-4 text-left text-lg font-semibold text-white bg-red-600 hover:bg-red-700 rounded ${
+//   isCollapsed ? "w-8 h-8 flex items-center justify-center text-sm" : ""
+//   }`}
+// >
+//   {isCollapsed ? "↩" : "Logout"}
+// </button>
 
   return (
     <div className="flex flex-col h-screen">

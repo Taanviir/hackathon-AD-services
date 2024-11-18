@@ -9,8 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from .serializers import EmployeeSignupSerializer, EmployeeLoginSerializer
 from .middleware import JWTCookieAuthentication, add_token_to_blacklist
-from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.http import HttpResponse
 
 
 """
@@ -108,7 +107,7 @@ class LoginView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SignOutView(View):
+class LogOutView(View):
     authenctication_classes = [JWTCookieAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -121,13 +120,11 @@ class SignOutView(View):
                 jwt.ExpiredSignatureError or jwt.InvalidTokenError or jwt.DecodeError
             ) as e:
                 print("Token has: ", e)
-            response = HttpResponseRedirect(reverse("landing_page"))
+            response = HttpResponse()
             response.delete_cookie("access_token")
             response.delete_cookie("refresh_token")
-            # response.delete_cookie('csrftoken')
-            response.singed_out = True
             return response
-        return HttpResponseRedirect(reverse("landing_page"))
+        return HttpResponse()
 
 
 """
