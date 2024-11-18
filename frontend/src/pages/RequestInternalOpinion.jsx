@@ -56,6 +56,18 @@ const RequestInternalOpinion = () => {
     });
     const get_data = await get_response.json();
     console.table(get_data);
+
+    // dashboard info - for testing
+    const dashboard_response = await fetch("http://localhost:8000/api/dashboard_info", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    const dashboard_data = await dashboard_response.json();
+    console.log("dashboard_response");
+    console.log(dashboard_data);
   };
 
   return (

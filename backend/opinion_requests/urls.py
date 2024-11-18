@@ -8,5 +8,5 @@ router.register(r"opinion_request", OpinionRequestViewSet, basename="opinion_req
 urlpatterns = router.urls
 
 urlpatterns += [
-    path(r"^dashboard_info/?$", DashBoardInfo.as_view(), name="dashboard_info"),
+    re_path(r"^dashboard_info/?$", DashBoardInfo.as_view(), name="dashboard_info"),
 ]

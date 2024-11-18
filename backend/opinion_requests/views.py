@@ -307,11 +307,9 @@ class DashBoardInfo(APIView):
         now = timezone.now()
 
         # Filter for requests where the deadline has passed and status is not "finished"
-        overdue_requests = OpinionRequest.objects.filter(
-            deadline__lt=now, status__neq="finished"
-        )
+        overdue_requests = OpinionRequest.objects.filter(deadline__lt=now, status__neq="finished")
 
-        return Response(
+        return JsonResponse(
             {
                 "tasks_waiting_feedback_count": tasks_waiting_feedback.count(),
                 "tasks_submitted_count": reqs_submitted.count(),
