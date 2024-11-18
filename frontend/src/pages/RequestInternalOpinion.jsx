@@ -46,7 +46,6 @@ const RequestInternalOpinion = () => {
       console.error("An error occurred:", error);
       setResponseMessage("An error occurred while submitting the request.");
     }
-
     // get method - for testing
     const get_response = await fetch("http://localhost:8000/api/opinion_request/", {
       method: "GET",
