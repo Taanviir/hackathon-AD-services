@@ -37,21 +37,18 @@ class OpinionRequest(models.Model):
         ("active", "Active"),
         ("finished", "Finished"),
     ]
-    status = models.CharField(
-        max_length=20, choices=STATUS_CHOICES, default="submitted"
-    )
-    assigned_to = models.ForeignKey(
-        Employee, on_delete=models.CASCADE, related_name="assigned_to", null=True
-    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="sent")
     resources = models.FileField(upload_to="resources/", null=True, blank=True)
     target_departments = models.ManyToManyField(
-        "IORTargetDepartment", related_name="target_departments", blank=True)
+        "IORTargetDepartment", related_name="target_departments", blank=True
+    )
 
     class Meta:
         db_table = "opinion_requests"
 
     def __str__(self):
         return f"{self.title} - {self.requester} ({self.status})"
+
 
 class IORTargetDepartment(models.Model):
     id = models.BigAutoField(primary_key=True)

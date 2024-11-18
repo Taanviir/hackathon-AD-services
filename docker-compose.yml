@@ -42,6 +42,7 @@ services:
       interval: 15s
       timeout: 15s
       retries: 5
+      start_period: 10s #! waiting a little bit before starting healthchecks - for creating the test users
     ports:
       - "8000:8000"
 

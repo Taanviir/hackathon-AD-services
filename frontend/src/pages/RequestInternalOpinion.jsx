@@ -74,7 +74,7 @@ const RequestInternalOpinion = () => {
       }
     );
     const get_data = await get_response.json();
-    console.table("All Opinion Requests:", get_data);
+    console.table(get_data);
   };
 
   return (
