@@ -235,7 +235,6 @@ class OpinionRequestViewSet(viewsets.ViewSet):
                 {"error": "No department-specific questions generated."}, status=400
             )
 
-
         # Serialize and save the OpinionRequest with department classification
         serializer = OpinionRequestSerializer(data=request.data)
         if serializer.is_valid():
@@ -246,25 +245,46 @@ class OpinionRequestViewSet(viewsets.ViewSet):
                 department["request"] = opinion_request.id
 
                 # Create the target department
-                target_department_serializer = IORTargetDepartmentSerializer(data=department)
+                target_department_serializer = IORTargetDepartmentSerializer(
+                    data=department
+                )
 
                 if target_department_serializer.is_valid():
                     target_department = target_department_serializer.save()
                     opinion_request.target_departments.add(target_department)
                 else:
-                    return Response(target_department_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    return Response(
+                        target_department_serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-
+        print(serializer.errors, flush=True)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
         try:
             # Retrieve the specific OpinionRequest instance by pk
             opinion_request = OpinionRequest.objects.get(pk=pk)
-            serializer = OpinionRequestSerializer(opinion_request)
+            or_serializer = OpinionRequestSerializer(opinion_request)
             # TODO: retrive all the question and feedbacks for each department - based on the department of the request.user
-            return Response(serializer.data)
+            dept_qstns_feedb = opinion_request.target_departments.all().filter(
+                department_name="Legal"
+            )
+            # dept_qstns_feedb = opinion_request.target_departments.all().filter(department_name=request.user.department)
+            td_serializer = IORTargetDepartmentSerializer(dept_qstns_feedb, many=True)
+            print(
+                {
+                    "opinion_request": or_serializer.data,
+                    "target_departments": td_serializer.data,
+                }
+            )
+            return Response(
+                {
+                    "opinion_request": or_serializer.data,
+                    "target_departments": td_serializer.data,
+                }
+            )
         except OpinionRequest.DoesNotExist:
             return Response(
                 {"error": "OpinionRequest not found."}, status=status.HTTP_404_NOT_FOUND
