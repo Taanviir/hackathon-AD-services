@@ -1,4 +1,4 @@
-import re
+import json
 import openai
 import os
 import PyPDF2
@@ -34,78 +34,68 @@ DEPARTMENT_NAMES = [
 ]
 
 
-def prepare_response(questions):
+def prepare_response(gpt_response):
     """
-    Transforms a string containing department-specific questions into a JSON format.
+    Parses the JSON response from GPT and returns a list of dictionaries representing departments and their questions.
 
     Args:
-        questions (str): A string where departments and their questions are listed in a specific format.
+        gpt_response (str): A JSON string containing the departments and their questions as structured by GPT.
 
     Returns:
-        list: A list of dictionaries, each representing a department and its questions.
-              A list of errors is also returned.
+        tuple: A tuple containing:
+            - A list of dictionaries, each representing a department and its questions.
+            - A list of errors encountered during parsing.
     """
     departments = []
     errors = []
 
-    # Split input into blocks based on department headers
-    department_blocks = re.split(r"\*\*Department Name: (.+?)\*\*", questions)
+    try:
+        # Parse the JSON string
+        parsed_response = json.loads(f"[{gpt_response}]")
 
-    # Iterate over the blocks, extracting department name and questions
-    for i in range(1, len(department_blocks), 2):
-        department_name = department_blocks[i].strip()
-        question_text = department_blocks[i + 1].strip()
+        # Validate each department block
+        for department in parsed_response:
+            if "department_name" not in department or "questions" not in department:
+                errors.append(f"Invalid department entry: {department}")
+                continue
 
-        # Validate department name
-        if not department_name:
-            errors.append("Missing department name in one of the blocks.")
-            continue
+            if not isinstance(department["questions"], list):
+                errors.append(
+                    f"Questions for department '{department['department_name']}' must be a list."
+                )
+                continue
 
-        # Extract questions, assuming they are prefixed with '- '
-        question_list = [
-            q.strip("- ").strip()
-            for q in question_text.splitlines()
-            if q.startswith("- ")
-        ]
+            # Append valid department data
+            departments.append(department)
 
-        # Handle cases with no valid questions
-        if not question_list:
-            errors.append(
-                f"No valid questions found for department '{department_name}'."
-            )
-            continue
+    except json.JSONDecodeError as e:
+        errors.append(f"JSON parsing error: {e}")
 
-        # Append department and its questions to the departments
-        departments.append(
-            {"department_name": department_name, "questions": question_list}
-        )
-
-    # Check for completely invalid input
-    if not departments and not errors:
-        errors.append(
-            "Input does not contain any valid department headers or questions."
-        )
-
+    # Return the parsed departments and errors
     return departments, errors
 
 
 def get_chatgpt_analysis(context):
     prompt = f"""
-You are an expert in project planning and organizational management. Based on the following project details, generate a list of targeted form questions for different departments to provide their input. Only generate questions for departments that are clearly relevant to the project.
+    You are an expert in project planning and organizational management. Based on the following project details, generate a list of targeted form questions for different departments to provide their input. Only generate questions for departments that are clearly relevant to the project.
 
-Here are the departments in the company: {DEPARTMENT_NAMES}
+    Here are the departments in the company: {DEPARTMENT_NAMES}
 
-Project Details:
-{context}
+    Project Details:
+    {context}
 
-Output the questions in this format:
-Department Name:
-- Question 1
-- Question 2
-...
+    Output the questions in a JSON format like, no markdown:
+    {{
+        "department_name": "finance",
+        "questions": [
+            "What is...?",
+            "How is this that...?",
+            ...
+        ]
+    }},
 
-Only include departments that are necessary for this project. Ensure the questions are practical and actionable.
-"""
+    Only include departments that are necessary for this project. Ensure the questions are practical and actionable.
+    """
 
     try:
         response = openai.chat.completions.create(
@@ -194,9 +184,7 @@ class OpinionRequestViewSet(viewsets.ViewSet):
         # )
         requests_to_my_dpt = (
             OpinionRequest.objects.all()
-            .filter(
-                Q(target_departments__department_name=request.user.department)
-            )
+            .filter(Q(target_departments__department_name=request.user.department))
             .order_by("-created_at")
         )
         serializer = OpinionRequestSerializer(requests_to_my_dpt, many=True)
@@ -208,34 +196,32 @@ class OpinionRequestViewSet(viewsets.ViewSet):
         priority_level = request.data.get("priority")
         deadline = request.data.get("deadline")
 
-        # Handle multiple file uploads
-        # ? files should not be mandatory - our shit should work with or without uploaded files
-        uploaded_files = request.FILES.getlist("file")
-        if not uploaded_files:
-            return JsonResponse({"error": "No files uploaded"}, status=400)
-
-        # Save and process uploaded files
-        file_storage = FileSystemStorage(
-            location=os.path.join(os.getcwd(), "media/uploads")
-        )
-        extracted_contents = []
-        try:
-            for uploaded_file in uploaded_files:
-                saved_path = file_storage.save(uploaded_file.name, uploaded_file)
-                full_path = file_storage.path(saved_path)
-                extracted_contents.append(process_file(full_path))
-        except ValueError as e:
-            return JsonResponse({"error": str(e)}, status=415)
-
         # Combine form data and extracted content
         full_context = f"""
         Request Title: {request_title}
         Request Description: {request_description}
         Priority Level: {priority_level}
         Deadline: {deadline}
-        Attached Contents:
-        {'\n\n'.join(extracted_contents)}
         """
+
+        # Handle multiple file uploads
+        uploaded_files = request.FILES.getlist("file")
+        if uploaded_files:
+            file_storage = FileSystemStorage(
+                location=os.path.join(os.getcwd(), "media/uploads")
+            )
+            extracted_contents = []
+            try:
+                for uploaded_file in uploaded_files:
+                    saved_path = file_storage.save(uploaded_file.name, uploaded_file)
+                    full_path = file_storage.path(saved_path)
+                    extracted_contents.append(process_file(full_path))
+            except ValueError as e:
+                return JsonResponse({"error": str(e)}, status=415)
+            full_context += f"""
+            Attached Contents:
+            {'\n\n'.join(extracted_contents)}
+            """
 
         questions = get_chatgpt_analysis(full_context)
         departments, errors = prepare_response(questions)
@@ -321,7 +307,9 @@ class DashBoardInfo(APIView):
         now = timezone.now()
 
         # Filter for requests where the deadline has passed and status is not "finished"
-        overdue_requests = OpinionRequest.objects.filter(deadline__lt=now, status__neq="finished")
+        overdue_requests = OpinionRequest.objects.filter(
+            deadline__lt=now, status__neq="finished"
+        )
 
         return Response(
             {
