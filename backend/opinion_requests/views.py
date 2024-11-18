@@ -8,6 +8,7 @@ import mimetypes
 from django.http import JsonResponse
 from django.core.files.storage import FileSystemStorage
 from rest_framework import status, viewsets
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
@@ -16,6 +17,7 @@ from em_auth.models import Employee
 from .serializers import *
 from .models import *
 from rest_framework.parsers import MultiPartParser, FormParser
+from django.db.models import Q
 
 
 openai.api_key = settings.OPENAI_API_KEY
@@ -162,7 +164,7 @@ def process_file(file_path):
         # TODO: handle image???
         # Extract text from images using OCR
         #     image = Image.open(file_path)
-        # text = pytesseract.image_to_string(image)  #!
+        # text = pytesseract.image_to_string(image)
         text = ""
     else:
         raise ValueError(
@@ -178,17 +180,26 @@ class OpinionRequestViewSet(viewsets.ViewSet):
     parser_classes = (MultiPartParser, FormParser)
 
     def list(self, request):
-        my_request_qs = (
-            OpinionRequest.objects.all()
-            .filter(requester=request.user)
-            .order_by("-created_at")
-        )
+        # ? should we return the ones that came to his department or the ones he requested feeback for?
+        # my_request_qs = (
+        #     OpinionRequest.objects.all()
+        #     .filter(requester=request.user)
+        #     .order_by("-created_at")
+        # )
+        # serializer = OpinionRequestSerializer(my_request_qs, many=True)
         # requests_to_my_dpt = (
         #     OpinionRequest.objects.all()
         #     .filter(target_department=request.user.department)
         #     .order_by("-created_at")
         # )
-        serializer = OpinionRequestSerializer(my_request_qs, many=True)
+        requests_to_my_dpt = (
+            OpinionRequest.objects.all()
+            .filter(
+                Q(target_departments__department_name=request.user.department)
+            )
+            .order_by("-created_at")
+        )
+        serializer = OpinionRequestSerializer(requests_to_my_dpt, many=True)
         return Response(serializer.data)
 
     def create(self, request):
@@ -198,6 +209,7 @@ class OpinionRequestViewSet(viewsets.ViewSet):
         deadline = request.data.get("deadline")
 
         # Handle multiple file uploads
+        # ? files should not be mandatory - our shit should work with or without uploaded files
         uploaded_files = request.FILES.getlist("file")
         if not uploaded_files:
             return JsonResponse({"error": "No files uploaded"}, status=400)
@@ -228,12 +240,14 @@ class OpinionRequestViewSet(viewsets.ViewSet):
         questions = get_chatgpt_analysis(full_context)
         departments, errors = prepare_response(questions)
 
-        if errors:
-            return JsonResponse({"error": errors}, status=400)
-        elif not departments:
-            return JsonResponse(
-                {"error": "No department-specific questions generated."}, status=400
-            )
+        # ? do we need to handle errors here? - like if there are no questions generated for any department
+        # ? the request has to be created and not forwared to other departments, NO?
+        # if errors:
+        #     return JsonResponse({"error": errors}, status=400)
+        # elif not departments:
+        #     return JsonResponse(
+        #         {"error": "No department-specific questions generated."}, status=400
+        #     )
 
         # Serialize and save the OpinionRequest with department classification
         serializer = OpinionRequestSerializer(data=request.data)
@@ -289,3 +303,31 @@ class OpinionRequestViewSet(viewsets.ViewSet):
             return Response(
                 {"error": "OpinionRequest not found."}, status=status.HTTP_404_NOT_FOUND
             )
+
+
+class DashBoardInfo(APIView):
+    authentication_classes = [JWTCookieAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        tasks_waiting_feedback = (
+            IORTargetDepartment.objects.all()
+            .filter(department_name=request.user.department)
+            .filter(feedback="")
+        )
+        reqs_submitted = OpinionRequest.objects.all().filter(requester=request.user)
+
+        # Get the current time
+        now = timezone.now()
+
+        # Filter for requests where the deadline has passed and status is not "finished"
+        overdue_requests = OpinionRequest.objects.filter(deadline__lt=now, status__neq="finished")
+
+        return Response(
+            {
+                "tasks_waiting_feedback_count": tasks_waiting_feedback.count(),
+                "tasks_submitted_count": reqs_submitted.count(),
+                "tasks_overdue_count": overdue_requests.count(),
+            },
+            status=status.HTTP_200_OK,
+        )
