@@ -6,55 +6,73 @@ const RequestInternalOpinion = () => {
   const [requestDescription, setRequestDescription] = useState("");
   const [priorityLevel, setPriorityLevel] = useState("");
   const [dueDate, setDueDate] = useState("");
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]); // Change to array
   const [responseMessage, setResponseMessage] = useState("");
 
   const handleFileChange = (e) => {
-    setFile(e.target.files);
+    const selectedFiles = Array.from(e.target.files);
+    setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+  };
+
+  const handleRemoveFile = (index) => {
+    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const form = document.getElementById('opinionRequestForm');
+    const form = document.getElementById("opinionRequestForm");
     const formData = new FormData(form);
+
+    // Append files to FormData
+    files.forEach((file) => {
+      formData.append("file", file); // Ensure the key matches your backend expectation
+    });
 
     // Logging formData to see its contents
     for (let pair of formData.entries()) {
-      console.log(pair[0]+ ', ' + pair[1]);
+      console.log(pair[0] + ", " + pair[1]);
     }
 
     try {
-      const response = await fetch("http://localhost:8000/api/opinion_request/", {
-        method: "POST",
-        body: formData,
-        credentials: "include",
-      });
+      const response = await fetch(
+        "http://localhost:8000/api/opinion_request/",
+        {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        }
+      );
 
       console.log("Response status:", response.status);
       const jsonResponse = await response.json();
       console.log("Response JSON:", jsonResponse);
 
       if (response.ok) {
-          setResponseMessage("Request submitted successfully!");
+        setResponseMessage("Request submitted successfully!");
       } else {
-          setResponseMessage(
-              `Failed to submit the request. Error: ${jsonResponse.error || "Unknown error"}`
-          );
+        setResponseMessage(
+          `Failed to submit the request. Error: ${
+            jsonResponse.error || "Unknown error"
+          }`
+        );
       }
     } catch (error) {
       console.error("An error occurred:", error);
       setResponseMessage("An error occurred while submitting the request.");
     }
 
-    // get method - for testing
-    const get_response = await fetch("http://localhost:8000/api/opinion_request/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    // For testing - GET method
+    const get_response = await fetch(
+      "http://localhost:8000/api/opinion_request/",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
     const get_data = await get_response.json();
     console.table("All Opinion Requests:", get_data);
   };
@@ -66,7 +84,11 @@ const RequestInternalOpinion = () => {
       </h1>
 
       <div className="w-[550px] h-[730px] flex-shrink-0 rounded-[20px] bg-[rgba(255,255,255,0.56)] p-6 relative left-80">
-        <form id="opinionRequestForm" onSubmit={handleSubmit} className="space-y-4">
+        <form
+          id="opinionRequestForm"
+          onSubmit={handleSubmit}
+          className="space-y-4"
+        >
           <div>
             <label
               htmlFor="requestTitle"
@@ -117,9 +139,9 @@ const RequestInternalOpinion = () => {
             priorityLevel={priorityLevel}
             setPriorityLevel={setPriorityLevel}
           />
-          <div className="flex flex-col">
+          <div className="flex flex-row">
             <div
-              className="mt-5 w-[300px] h-[100px] flex-shrink-0 rounded-[4px] bg-[rgba(191,186,174,0.72)] flex flex-col items-center justify-center cursor-pointer"
+              className="mt-5 w-[300px] h-[100px] flex-shrink-0 rounded-[4px] me-3 bg-[rgba(191,186,174,0.72)] flex flex-col items-center justify-center cursor-pointer"
               onClick={() => document.getElementById("fileUpload").click()}
             >
               <span
@@ -136,7 +158,7 @@ const RequestInternalOpinion = () => {
                 id="fileUpload"
                 name="file"
                 onChange={handleFileChange}
-                style={{ display: "none" }} // Hide the file input
+                style={{ display: "none" }}
                 multiple
               />
               <svg
@@ -155,6 +177,28 @@ const RequestInternalOpinion = () => {
                   strokeLinejoin="round"
                 />
               </svg>
+            </div>
+
+            <div className="mt-3 overflow-y-auto max-h-[120px] flex">
+              {files.map((file, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between bg-gray-200 p-2 rounded mt-2 mr-2 w-[calc(70%)]"
+                >
+                  <span title={file.name}>
+                    {file.name.length > 15
+                      ? `${file.name.substring(0, 15)}...`
+                      : file.name}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveFile(index)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
           <div>
