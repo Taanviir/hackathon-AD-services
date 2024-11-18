@@ -6,6 +6,8 @@ db.sqlite3
 **/node_modules/**
 **/migrations/**
 
+media/
+
 # Logs
 logs
 *.log

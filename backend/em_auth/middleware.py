@@ -62,7 +62,6 @@ def add_token_to_blacklist(token_string):
 class JWTCookieAuthentication(JWTAuthentication):
     def authenticate(self, request):
         raw_token = request.COOKIES.get("access_token")
-        print("raw token", raw_token, flush=True)
         if raw_token is None:
             print("No token found in cookies", flush=True)
             raise AuthenticationFailed("No token found in cookies")
@@ -71,7 +70,6 @@ class JWTCookieAuthentication(JWTAuthentication):
                 print("Token is blacklisted", flush=True)
                 raise AuthenticationFailed("This token is blacklisted")
             validated_token = self.get_validated_token(raw_token)
-            print("validated token", validated_token, flush=True)
             user = self.get_user(validated_token)
             print("user", user, flush=True)
             return (user, validated_token)

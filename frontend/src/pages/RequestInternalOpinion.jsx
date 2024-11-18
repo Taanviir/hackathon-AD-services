@@ -10,39 +10,37 @@ const RequestInternalOpinion = () => {
   const [responseMessage, setResponseMessage] = useState("");
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    setFile(e.target.files);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting request...");
 
-    const data = {
-      "title": requestTitle,
-      "description": requestDescription,
-      "deadline": new Date(dueDate).toISOString(),
-      "priority": priorityLevel || "medium"
+    const form = document.getElementById('opinionRequestForm');
+    const formData = new FormData(form);
+
+    // Logging formData to see its contents
+    for (let pair of formData.entries()) {
+      console.log(pair[0]+ ', ' + pair[1]);
     }
-
-    console.table(data)
 
     try {
       const response = await fetch("http://localhost:8000/api/opinion_request/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        body: formData,
         credentials: "include",
       });
 
-      console.log("response:", response);
+      console.log("Response status:", response.status);
+      const jsonResponse = await response.json();
+      console.log("Response JSON:", jsonResponse);
+
       if (response.ok) {
           setResponseMessage("Request submitted successfully!");
-          console.log("submited successful!");
       } else {
-          console.error("submisson failed:");
-          throw new Error(`HTTP error! status: ${response.status}`);
+          setResponseMessage(
+              `Failed to submit the request. Error: ${jsonResponse.error || "Unknown error"}`
+          );
       }
     } catch (error) {
       console.error("An error occurred:", error);
@@ -68,7 +66,7 @@ const RequestInternalOpinion = () => {
       </h1>
 
       <div className="w-[550px] h-[730px] flex-shrink-0 rounded-[20px] bg-[rgba(255,255,255,0.56)] p-6 relative left-80">
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form id="opinionRequestForm" onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
               htmlFor="requestTitle"
@@ -84,6 +82,7 @@ const RequestInternalOpinion = () => {
             <input
               type="text"
               id="requestTitle"
+              name="title"
               value={requestTitle}
               onChange={(e) => setRequestTitle(e.target.value)}
               placeholder="Enter a concise title for the request"
@@ -105,6 +104,7 @@ const RequestInternalOpinion = () => {
             </label>
             <textarea
               id="requestDescription"
+              name="description"
               value={requestDescription}
               onChange={(e) => setRequestDescription(e.target.value)}
               placeholder="Provide a detailed description of your request, including any specific requirements or context..."
@@ -134,8 +134,10 @@ const RequestInternalOpinion = () => {
               <input
                 type="file"
                 id="fileUpload"
+                name="file"
                 onChange={handleFileChange}
                 style={{ display: "none" }} // Hide the file input
+                multiple
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -170,6 +172,7 @@ const RequestInternalOpinion = () => {
             <input
               type="date"
               id="dueDate"
+              name="deadline"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
               min={new Date().toISOString().split("T")[0]}
