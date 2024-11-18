@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import InfoBox from "../components/InfoBox";
 import OpinionBox from "../components/OpinionBox";
-import './Home.css';
+import "./Home.css";
 
 const Home = () => {
   return (
@@ -11,13 +11,20 @@ const Home = () => {
         <h1>Welcome back Haben Tesfamariam Abdoul Jaleelulloh Gaim</h1>
       </header>
       <main className="mt-8 ms-4">
-        <section>
+        <section className="pb-8">
           <h2 className="text-2xl font-bold mb-4 ms-6">Overview</h2>
-          <InfoBox text="opinion requests waiting for your review" value="2" />
-          <InfoBox text="tasks overdue" value="0" />
-          <InfoBox text="just here for the looks" value="8" />
+          <div className="grid grid-cols-2 gap-2 max-w-[1210px]">
+            <InfoBox
+              text="opinion requests waiting for your review"
+              value="2"
+            />
+            <InfoBox text="resources saved" value="0" />
+            <InfoBox text="opinion requests submitted" value="0" />
+            <InfoBox text="tasks overdue" value="0" />
+          </div>
         </section>
-        <section className="mt-14">
+        <div className="ms-[-60px] border-b border-gold-800"></div>
+        <section className="mt-10">
           <h2 className="text-2xl font-bold ms-6">Pending Opinions</h2>
           <div className="flex flex-row gap-8">
             <OpinionBox

@@ -13,4 +13,7 @@ python manage.py migrate
 
 # Start the Django server
 echo "Starting Django server..."
+
+sh ./create_test_users.sh
+
 python manage.py runserver "0.0.0.0:8000"
