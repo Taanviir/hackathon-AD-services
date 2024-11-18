@@ -58,6 +58,17 @@ const Sidebar = () => {
             {isCollapsed ? "" : "Request Internal Opinion"}
           </Link>
         </li>
+        {/* <div className="w-full h-[2px] bg-[#695D3C]"></div> */}
+        {/* <li className="text-lg font-semibold ms-1">
+          <Link
+            to="/opinion-form"
+            className={`block py-2 px-4 text-left text-gold-900 transition duration-200 ease-in-out border border-transparent hover:bg-[rgba(158,146,96,0.4)] hover:text-white rounded ${
+              isCollapsed ? "text-center" : ""
+            }`}
+          >
+            {isCollapsed ? "" : "Opinion Form"}
+          </Link>
+        </li> */}
         <div className="w-full h-[2px] bg-[#695D3C]"></div>
         <li className="text-lg font-semibold ms-1">
           <Link

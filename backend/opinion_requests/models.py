@@ -38,7 +38,10 @@ class OpinionRequest(models.Model):
         ("finished", "Finished"),
     ]
     status = models.CharField(
-        max_length=20, choices=STATUS_CHOICES, default="sent"
+        max_length=20, choices=STATUS_CHOICES, default="submitted"
+    )
+    assigned_to = models.ForeignKey(
+        Employee, on_delete=models.CASCADE, related_name="assigned_to", null=True
     )
     resources = models.FileField(upload_to="resources/", null=True, blank=True)
     target_departments = models.ManyToManyField(

@@ -77,7 +77,7 @@ const Research = () => {
       </div>
       <div
         className={`flex flex-col absolute ${
-          searching ? "left-[45%] top-5" : "left-[45%] top-[48%]"
+          searching ? "left-[45%] top-8" : "left-[45%] top-[48%]"
         } transition-all duration-500`}
       >
         <div className="relative flex-shrink-0 mx-3 w-[160%] max-w-[1000px] left-[-15%]">
