@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const OpinionForm = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { id } = location.state || {};
-  console.log("Opinion form id:", id);
 
   const [opinion, setOpinion] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,7 +17,9 @@ const OpinionForm = () => {
     questions: [],
   });
 
-  const questionsPerPage = 3;
+  const [answers, setAnswers] = useState([]);
+
+  const questionsPerPage = 2;
 
   useEffect(() => {
     const fetchOpinionData = async () => {
@@ -38,20 +40,22 @@ const OpinionForm = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log("Opinion request data:", data);
 
-        // Access the opinion_request object correctly
         const opinionRequest = data.opinion_request;
+        const target_departments = data.target_departments;
+        console.log(target_departments)
 
         setFormData({
           title: opinionRequest.title,
           description: opinionRequest.description,
-          dueDate: opinionRequest.deadline, // Use 'deadline' instead of 'dueDate'
-          requestor: opinionRequest.requestor, // This may be undefined in your data
-          department: opinionRequest.department, // This may be undefined in your data
-          questions: opinionRequest.questions || [], // Adjust according to your API response
+          dueDate: opinionRequest.deadline,
+          requestor: opinionRequest.requestor,
+          department: target_departments[0].department_name,
+          questions: target_departments[0].questions || [],
         });
-        console.log("formData:", formData);
+
+        // Initialize answers as an empty array
+        setAnswers(new Array(target_departments[0].questions.length).fill(""));
       } catch (error) {
         console.error("Error fetching opinion request:", error);
       }
@@ -60,25 +64,36 @@ const OpinionForm = () => {
     fetchOpinionData();
   }, [id]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     // Prepare data for submission
     const submissionData = {
-      opinion,
-      ...formData,
+        ...formData.questions,
+      answers,
     };
 
-    console.log("Submitted data:", JSON.stringify(submissionData));
-
+    try {
     // Send data back to the backend
-    // await fetch("/api/submit-opinion", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(submissionData),
-    // });
+    const response = await fetch(`http://localhost:8000/api/opinion_request/${id}/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(submissionData),
+      credentials: "include",
+    });
+
+    if (response.ok) {
+        // If the submission is successful, navigate to the homepage
+        navigate("/");  // Redirect to the homepage
+      } else {
+        // Handle error if the response is not OK
+        console.error("Submission failed:", response);
+      }
+    } catch (error) {
+        console.error("Error during submission:", error);
+    }
   };
 
   const handleNext = () => {
@@ -136,23 +151,18 @@ const OpinionForm = () => {
                 (currentPage - 1) * questionsPerPage,
                 currentPage * questionsPerPage
               )
-              .map((question, index) => (
+              .map((questionText, index) => (
                 <div key={index}>
                   <label className="block text-sm font-semibold text-gold-800">
-                    {question.text}:
+                    {questionText}
                   </label>
                   <textarea
-                    value={question.answer}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        questions: formData.questions.map((q, i) =>
-                          i === index + (currentPage - 1) * questionsPerPage
-                            ? { ...q, answer: e.target.value }
-                            : q
-                        ),
-                      })
-                    }
+                    value={answers[(currentPage - 1) * questionsPerPage + index]}  // Adjust answer mapping based on the page
+                    onChange={(e) => {
+                      const updatedAnswers = [...answers];
+                      updatedAnswers[(currentPage - 1) * questionsPerPage + index] = e.target.value;
+                      setAnswers(updatedAnswers);  // Update the answer for the current question
+                    }}
                     className="w-full h-32 p-2 border border-gold-800 rounded"
                   />
                 </div>
@@ -178,13 +188,15 @@ const OpinionForm = () => {
             </button>
           </div>
         </div>
-        {/* <button
-          type="submit"
-          form="opinionRequestForm"
-          className="px-4 py-2 bg-gold-800 text-white rounded-md"
+        <div className="flex justify-center mt-4">
+        <button
+            type="submit"
+            form="opinionRequestForm"
+            className="px-4 py-2 bg-gold-800 text-white rounded-md"
         >
-          Submit
-        </button> */}
+            Submit
+        </button>
+        </div>
       </div>
     </div>
   );

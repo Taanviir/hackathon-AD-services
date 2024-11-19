@@ -8,13 +8,10 @@ psycopg2-binary
 django-redis
 PyJWT
 redis
-numpy
 pandas
 openai
-requests
-beautifulsoup4
 black
 PyPDF2
 python-docx
-pytesseract
-pillow
+# pytesseract
+# pillow

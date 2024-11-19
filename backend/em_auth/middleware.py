@@ -71,7 +71,6 @@ class JWTCookieAuthentication(JWTAuthentication):
                 raise AuthenticationFailed("This token is blacklisted")
             validated_token = self.get_validated_token(raw_token)
             user = self.get_user(validated_token)
-            print("user", user, flush=True)
             return (user, validated_token)
         except InvalidToken as e:
             print("invalid token", flush=True)

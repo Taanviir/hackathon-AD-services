@@ -7,8 +7,6 @@ function DepartmentSelect({ department, setDepartment }) {
     "Marketing",
     "Sales",
     "Finance",
-    "Customer Support",
-    "Product",
     "Legal",
     "Information Technology",
     "Health",
