@@ -30,8 +30,8 @@ const PriorityLevelSelector = ({ priorityLevel, setPriorityLevel }) => {
                         <span
                             className="w-4 h-4 border rounded-full mr-2 transition-colors duration-200"
                             style={{
-                                borderColor: '#C0C0C0', // Gray border
-                                backgroundColor: priorityLevel === 'high' ? '#BFBAAE' : 'transparent', // Dark gold for checked
+                                borderColor: '#81807a', // Gray border
+                                backgroundColor: priorityLevel === 'high' ? '#857c65' : 'transparent', // Dark gold for checked
                             }}
                         ></span>
                         High
@@ -54,8 +54,8 @@ const PriorityLevelSelector = ({ priorityLevel, setPriorityLevel }) => {
                         <span
                             className="w-4 h-4 border rounded-full mr-2 transition-colors duration-200"
                             style={{
-                                borderColor: '#C0C0C0', // Gray border
-                                backgroundColor: priorityLevel === 'medium' ? '#BFBAAE' : 'transparent', // Dark gold for checked
+                                borderColor: '#81807a', // Gray border
+                                backgroundColor: priorityLevel === 'medium' ? '#857c65' : 'transparent', // Dark gold for checked
                             }}
                         ></span>
                         Medium
@@ -78,8 +78,8 @@ const PriorityLevelSelector = ({ priorityLevel, setPriorityLevel }) => {
                         <span
                             className="w-4 h-4 border rounded-full mr-2 transition-colors duration-200"
                             style={{
-                                borderColor: '#C0C0C0', // Gray border
-                                backgroundColor: priorityLevel === 'low' ? '#BFBAAE' : 'transparent', // Dark gold for checked
+                                borderColor: '#81807a', // Gray border
+                                backgroundColor: priorityLevel === 'low' ? '#857c65' : 'transparent', // Dark gold for checked
                             }}
                         ></span>
                         Low
