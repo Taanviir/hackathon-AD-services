@@ -23,14 +23,15 @@ from django.db.models import Q
 openai.api_key = settings.OPENAI_API_KEY
 
 DEPARTMENT_NAMES = [
-    "Finance",
     "Human Resources",
+    "Marketing",
+    "Sales",
+    "Finance",
     "Legal",
     "Information Technology",
-    "Marketing",
-    "Strategy",
     "Health",
     "Operations",
+    "Strategy",
 ]
 
 
@@ -242,6 +243,7 @@ class OpinionRequestViewSet(viewsets.ViewSet):
             opinion_request = serializer.save(requester=emp)
 
             for department in departments:
+                print(department["department_name"])
                 department["request"] = opinion_request.id
 
                 # Create the target department

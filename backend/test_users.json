@@ -16,14 +16,14 @@
     {
         "full_name": "Charlie Brown",
         "email": "charlie.brown@company.com",
-        "department": "Engineering",
+        "department": "Operations",
         "position": "manager",
         "password": "123"
     },
     {
         "full_name": "David Smith",
         "email": "david.smith@company.com",
-        "department": "Engineering",
+        "department": "Operations",
         "position": "employee",
         "password": "123"
     },
@@ -72,42 +72,42 @@
     {
         "full_name": "Kathy Adams",
         "email": "kathy.adams@company.com",
-        "department": "Customer Support",
+        "department": "Strategy",
         "position": "manager",
         "password": "123"
     },
     {
         "full_name": "Liam Mitchell",
         "email": "liam.mitchell@company.com",
-        "department": "Customer Support",
+        "department": "Strategy",
         "position": "employee",
         "password": "123"
     },
     {
         "full_name": "Mona King",
         "email": "mona.king@company.com",
-        "department": "IT",
+        "department": "Information Technology",
         "position": "manager",
         "password": "123"
     },
     {
         "full_name": "Nathan Scott",
         "email": "nathan.scott@company.com",
-        "department": "IT",
+        "department": "Information Technology",
         "position": "employee",
         "password": "123"
     },
     {
         "full_name": "Olivia Wright",
         "email": "olivia.wright@company.com",
-        "department": "Product",
+        "department": "Health",
         "position": "manager",
         "password": "123"
     },
     {
         "full_name": "Paul Harris",
         "email": "paul.harris@company.com",
-        "department": "Product",
+        "department": "Health",
         "position": "employee",
         "password": "123"
     },
