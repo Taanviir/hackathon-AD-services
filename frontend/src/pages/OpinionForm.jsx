@@ -4,7 +4,6 @@ import { useLocation } from "react-router-dom";
 const OpinionForm = () => {
   const location = useLocation();
   const { id } = location.state || {};
-  console.log("Opinion form id:", id);
 
   const [opinion, setOpinion] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -38,7 +37,6 @@ const OpinionForm = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log("Opinion request data:", data);
 
         // Access the opinion_request object correctly
         const opinionRequest = data.opinion_request;
@@ -51,7 +49,6 @@ const OpinionForm = () => {
           department: opinionRequest.department, // This may be undefined in your data
           questions: opinionRequest.questions || [], // Adjust according to your API response
         });
-        console.log("formData:", formData);
       } catch (error) {
         console.error("Error fetching opinion request:", error);
       }

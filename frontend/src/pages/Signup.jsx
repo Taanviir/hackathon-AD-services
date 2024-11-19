@@ -24,8 +24,6 @@ function Signup() {
       return;
     }
 
-    console.log("Department:", department);
-    console.log("Position:", position);
     try {
       const response = await fetch("http://localhost:8000/api/signup/", {
         method: "POST",

@@ -8,9 +8,6 @@ function Login({ onLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
-
     try {
       const response = await fetch("http://localhost:8000/api/login/", {
         method: "POST",
@@ -22,7 +19,6 @@ function Login({ onLogin }) {
       });
 
       if (response.ok) {
-        console.log("Login successful!");
         onLogin();
         navigate("/");
       } else {

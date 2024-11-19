@@ -30,7 +30,6 @@ const Home = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log("Dashboard info data:", data);
         setDashboardInfo(data); // Set the dashboard info
       } catch (error) {
         console.error("Error fetching dashboard info:", error);
@@ -57,7 +56,6 @@ const Home = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log("Opinion requests data:", data);
         setOpinionRequests(data);
       } catch (error) {
         console.error("Error fetching opinion requests:", error);
