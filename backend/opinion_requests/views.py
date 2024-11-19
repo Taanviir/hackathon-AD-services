@@ -259,7 +259,6 @@ class OpinionRequestViewSet(viewsets.ViewSet):
                     )
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        print(serializer.errors, flush=True)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
@@ -267,21 +266,15 @@ class OpinionRequestViewSet(viewsets.ViewSet):
             # Retrieve the specific OpinionRequest instance by pk
             opinion_request = OpinionRequest.objects.get(pk=pk)
             or_serializer = OpinionRequestSerializer(opinion_request)
-            # TODO: retrive all the question and feedbacks for each department - based on the department of the request.user
+            # # TODO: retrive all the question and feedbacks for each department - based on the department of the request.user
             dept_qstns_feedb = opinion_request.target_departments.all().filter(
-                department_name="Legal"
+                department_name=request.user.department
             )
-            # dept_qstns_feedb = opinion_request.target_departments.all().filter(department_name=request.user.department)
             td_serializer = IORTargetDepartmentSerializer(dept_qstns_feedb, many=True)
-            print(
-                {
-                    "opinion_request": or_serializer.data,
-                    "target_departments": td_serializer.data,
-                }
-            )
+
             return Response(
                 {
-                    "requestor": request.user,
+                    "requestor": request.user.full_name,
                     "opinion_request": or_serializer.data,
                     "target_departments": td_serializer.data,
                 }

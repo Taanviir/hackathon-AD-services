@@ -61,16 +61,11 @@ class SignupView(APIView):
                 response.set_cookie("refresh_token", str(refresh), samesite="Strict")
                 is_manager = new_employee.position == "manager"
                 response.set_cookie("isManager", is_manager, samesite="Strict")
-                print(
-                    f"access tokens: {str(refresh.access_token)}, =>  Refresh: {str(refresh)}",
-                    flush=True,
-                )
                 return response
             return Response(
                 {"error_message": "Couldn't register the empolyee"},
                 status=status.HTTP_422_UNPROCESSABLE_ENTITY,
             )
-        print("serializer errors: ", serializer.errors, flush=True)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

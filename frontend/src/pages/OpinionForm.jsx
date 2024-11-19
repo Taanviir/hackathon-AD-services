@@ -119,7 +119,7 @@ const OpinionForm = () => {
             </div>
             <div>
               <p className="text-xl font-bold">Due Date</p>
-              <p>{formData.dueDate}</p>
+              <p>{new Date(formData.dueDate).toLocaleDateString('en-GB')}</p>
             </div>
             <div>
               <p className="text-xl font-bold">Requestor</p>
