@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const Sidebar = ({ onLogout }) => {
-  // Accept onLogout as a prop
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
 
@@ -25,7 +24,7 @@ const Sidebar = ({ onLogout }) => {
         />
       </div>
       <div className="my-5 w-full h-[2px] bg-[#695D3C]"></div>
-      <ul className="space-y-4 mb-[190%]">
+      <ul className="space-y-4 mb-[220%]">
         {/* Other sidebar links */}
         <li className={`text-lg font-semibold mt-5 ${isCollapsed ? "flex justify-center" : ""}`}>
           <Link
@@ -60,24 +59,15 @@ const Sidebar = ({ onLogout }) => {
           </Link>
         </li>
         <div className="w-full h-[2px] bg-[#695D3C]"></div>
-        <li className={`text-lg font-semibold mt-5 ${isCollapsed ? "flex justify-center" : ""}`}>
-          <Link
-            to="/opinion-form"
-            className={`block py-2 px-4 text-left text-gold-900 transition duration-200 ease-in-out border border-transparent hover:bg-[rgba(158,146,96,0.4)] hover:text-white rounded ${
-              isCollapsed ? "text-center" : ""
-            }`}
-          >
-            {isCollapsed ? "a" : "Test"}
-          </Link>
-        </li>
       </ul>
-      {/* Logout Button */}
       <button
         onClick={onLogout}
-        className={
-          `flex justify-center align-center block w-full py-2 px-4 text-left text-lg font-semibold text-white bg-red-600 hover:bg-red-700 rounded ${isCollapsed ? "opacity-0" : "opacity-100"}`}
+        className={`flex justify-center align-center block w-full py-2 text-left text-lg font-semibold text-white bg-red-600 hover:bg-red-700 rounded ${
+          isCollapsed ? "mt-[62vh] mx-1 px-1 w-[80%]" : "mt-[20vh] px-4"
+        }`}
+        aria-label="Logout"
       >
-        Logout ↩
+        {isCollapsed ? "↩" : "Logout"}
       </button>
     </aside>
   );

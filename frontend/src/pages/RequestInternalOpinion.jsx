@@ -45,8 +45,6 @@ const RequestInternalOpinion = () => {
       );
 
       if (response.ok) {
-        // setResponseMessage("Request submitted successfully!");
-        // setShowAlert(true);
         navigate("/", {
           state: { alertMessage: "Request submitted successfully!" },
         });

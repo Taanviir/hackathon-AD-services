@@ -4,14 +4,16 @@ function DepartmentSelect({ department, setDepartment }) {
   // Define a list of departments
   const departments = [
     "Human Resources",
-    "Engineering",
     "Marketing",
     "Sales",
     "Finance",
     "Customer Support",
-    "IT",
     "Product",
     "Legal",
+    "Information Technology",
+    "Health",
+    "Operations",
+    "Strategy",
   ];
 
   return (

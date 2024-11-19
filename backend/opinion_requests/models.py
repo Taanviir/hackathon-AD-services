@@ -55,7 +55,7 @@ class IORTargetDepartment(models.Model):
     request = models.ForeignKey(OpinionRequest, on_delete=models.CASCADE)
     department_name = models.CharField(max_length=150, blank=False)
     questions = models.JSONField(blank=True, null=True)
-    feedback = models.TextField(blank=True, null=True)
+    feedback = models.JSONField(blank=True, null=True)
 
     class Meta:
         db_table = "ior_target_departments"

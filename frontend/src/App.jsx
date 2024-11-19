@@ -1,25 +1,18 @@
 import React, { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, useNavigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import Research from "./pages/Research";
 import RequestInternalOpinion from "./pages/RequestInternalOpinion";
 import Sidebar from "./components/Sidebar";
-
-// development
 import Test from "./pages/Test";
 import OpinionForm from "./pages/OpinionForm";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const location = useLocation(); // Get the current location
+  const location = useLocation();
+  const navigate = useNavigate(); // Initialize navigate
 
   const checkAuthStatus = () => {
     const token = document.cookie
@@ -43,8 +36,8 @@ const App = () => {
   const handleLogout = () => {
     setIsLoggedIn(false);
     fetch("http://localhost:8000/api/logout/", {
-        method: "GET",
-        credentials: "include",
+      method: "GET",
+      credentials: "include",
     })
       .then((response) => {
         if (response.ok) {
@@ -59,16 +52,6 @@ const App = () => {
       });
   };
 
-//   {/* Logout Button */}
-//   <button
-//   onClick={handleLogout}
-//   className={`block bottom-4 left-4 w-[calc(100%-2rem)] py-2 px-4 text-left text-lg font-semibold text-white bg-red-600 hover:bg-red-700 rounded ${
-//   isCollapsed ? "w-8 h-8 flex items-center justify-center text-sm" : ""
-//   }`}
-// >
-//   {isCollapsed ? "↩" : "Logout"}
-// </button>
-
   return (
     <div className="flex flex-col h-screen">
       {/* Conditionally render the logo */}
@@ -80,7 +63,7 @@ const App = () => {
         />
       )}
       <div className="flex flex-1">
-        {isLoggedIn && <Sidebar />}
+        {isLoggedIn && <Sidebar onLogout={handleLogout} />} {/* Pass handleLogout here */}
         <div className="flex-1 p-8">
           <Routes>
             <Route
@@ -131,7 +114,7 @@ const App = () => {
 const AppWrapper = () => (
   <Router>
     <App />
-  </Router>
+  </ Router>
 );
 
 export default AppWrapper;

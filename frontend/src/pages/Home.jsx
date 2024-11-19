@@ -29,6 +29,7 @@ const Home = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        console.log("Opinion requests data:", data);
         setOpinionRequests(data);
       } catch (error) {
         console.error("Error fetching opinion requests:", error);
@@ -38,7 +39,6 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    // Check if there is state passed from navigation
     if (location.state && location.state.alertMessage) {
       setAlertMessage(location.state.alertMessage);
       setShowAlert(true);
