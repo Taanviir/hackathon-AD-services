@@ -11,7 +11,7 @@ const Sidebar = ({ onLogout }) => {
 
   return (
     <aside
-      className={`h-full bg-[#BFBAAE50] shadow-lg transition-all duration-300 ${
+      className={`h-full bg-[#BFBAAE50] shadow-lg  transition-all duration-300 ${
         isCollapsed ? "w-14 pt-1" : "w-[18rem] pt-1 px-3"
       }`}
     >
@@ -24,7 +24,7 @@ const Sidebar = ({ onLogout }) => {
         />
       </div>
       <div className="my-5 w-full h-[2px] bg-[#695D3C]"></div>
-      <ul className="space-y-4 mb-[220%]">
+      <ul className="space-y-4">
         {/* Other sidebar links */}
         <li className={`text-lg font-semibold mt-5 ${isCollapsed ? "flex justify-center" : ""}`}>
           <Link
@@ -62,8 +62,8 @@ const Sidebar = ({ onLogout }) => {
       </ul>
       <button
         onClick={onLogout}
-        className={`flex justify-center align-center block w-full py-2 text-left text-lg font-semibold text-white bg-red-600 hover:bg-red-700 rounded ${
-          isCollapsed ? "mt-[62vh] mx-1 px-1 w-[80%]" : "mt-[20vh] px-4"
+        className={`flex justify-center align-center block py-2 text-left text-lg font-semibold text-white bg-red-600 hover:bg-red-700 rounded ${
+          isCollapsed ? "w-[80%] mt-[62vh] mx-1 px-1" : "w-[88%] mx-4 mt-[60vh] px-4"
         }`}
         aria-label="Logout"
       >

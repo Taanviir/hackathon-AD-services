@@ -178,13 +178,13 @@ const OpinionForm = () => {
             </button>
           </div>
         </div>
-        <button
+        {/* <button
           type="submit"
           form="opinionRequestForm"
           className="px-4 py-2 bg-gold-800 text-white rounded-md"
         >
           Submit
-        </button>
+        </button> */}
       </div>
     </div>
   );

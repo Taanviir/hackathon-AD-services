@@ -16,7 +16,7 @@ from em_auth.middleware import JWTCookieAuthentication
 from em_auth.models import Employee
 from .serializers import *
 from .models import *
-from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.db.models import Q
 
 
@@ -167,48 +167,7 @@ def process_file(file_path):
 class OpinionRequestViewSet(viewsets.ViewSet):
     authentication_classes = [JWTCookieAuthentication]
     permission_classes = [IsAuthenticated]
-    # authentication_classes = []
-    # permission_classes = []
-    parser_classes = (MultiPartParser, FormParser, JSONParser)
-
-    # """ Update the status of the opinion request """
-    def update(self, request, pk=None):
-        try:
-            opinion_request = OpinionRequest.objects.get(pk=pk)
-            request_title = opinion_request.title
-            dept_specific_qstns = opinion_request.target_departments.all()
-
-            # filtering them by the department of the user
-            user_dpt_questions = dept_specific_qstns.filter(
-                department_name=request.user.department
-            ).first()
-            print("incoming feedback: ", request.data.get("feedback"), flush=True)
-            print("user_dpt_questions: ", user_dpt_questions, flush=True)
-            user_dpt_questions.feedback = request.data.get("feedback")
-            user_dpt_questions.save()
-            opinion_request.status = "finished"
-            opinion_request.save()
-
-            # Return the updated data
-            return Response(
-                {
-                    "message": "Opinion request updated successfully",
-                    "feedback": "Feedback updated successfully",
-                    "status": opinion_request.status,
-                },
-                status=status.HTTP_200_OK,
-            )
-
-        except OpinionRequest.DoesNotExist:
-            return Response(
-                {"error": "OpinionRequest not found."}, status=status.HTTP_404_NOT_FOUND
-            )
-        except Exception as e:
-            print("Error processing request:", str(e))
-            return Response(
-                {"error": f"Internal server error: {str(e)}"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+    parser_classes = (MultiPartParser, FormParser)
 
     def list(self, request):
         # ? should we return the ones that came to his department or the ones he requested feeback for?
@@ -308,11 +267,11 @@ class OpinionRequestViewSet(viewsets.ViewSet):
             # Retrieve the specific OpinionRequest instance by pk
             opinion_request = OpinionRequest.objects.get(pk=pk)
             or_serializer = OpinionRequestSerializer(opinion_request)
-            # # TODO: retrive all the question and feedbacks for each department - based on the department of the request.user
-            # dept_qstns_feedb = opinion_request.target_departments.all().filter(
-            #     department_name="Legal"
-            # )
-            dept_qstns_feedb = opinion_request.target_departments.all().filter(department_name=request.user.department)
+            # TODO: retrive all the question and feedbacks for each department - based on the department of the request.user
+            dept_qstns_feedb = opinion_request.target_departments.all().filter(
+                department_name="Legal"
+            )
+            # dept_qstns_feedb = opinion_request.target_departments.all().filter(department_name=request.user.department)
             td_serializer = IORTargetDepartmentSerializer(dept_qstns_feedb, many=True)
             print(
                 {
@@ -322,7 +281,7 @@ class OpinionRequestViewSet(viewsets.ViewSet):
             )
             return Response(
                 {
-                    "requester": request.user,
+                    "requestor": request.user,
                     "opinion_request": or_serializer.data,
                     "target_departments": td_serializer.data,
                 }
@@ -338,12 +297,10 @@ class DashBoardInfo(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        tasks_waiting_feedback = (
-            IORTargetDepartment.objects.all()
-            .filter(department_name=request.user.department)
-            .filter(feedback="")
+        tasks_waiting_feedback = IORTargetDepartment.objects.filter(
+            department_name=request.user.department, feedback=""
         )
-        reqs_submitted = OpinionRequest.objects.all().filter(requester=request.user)
+        reqs_submitted = OpinionRequest.objects.filter(requester=request.user)
 
         # Get the current time
         now = timezone.now()
@@ -351,13 +308,14 @@ class DashBoardInfo(APIView):
         # Filter for requests where the deadline has passed and status is not "finished"
         overdue_requests = OpinionRequest.objects.filter(deadline__lt=now).exclude(
             status="finished"
-        )
+        )  # Use exclude to filter out finished requests
 
-        return JsonResponse(
+        return Response(
             {
                 "tasks_waiting_feedback_count": tasks_waiting_feedback.count(),
                 "tasks_submitted_count": reqs_submitted.count(),
                 "tasks_overdue_count": overdue_requests.count(),
+                "user_name": request.user.full_name,
             },
             status=status.HTTP_200_OK,
         )

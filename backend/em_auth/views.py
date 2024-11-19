@@ -123,6 +123,8 @@ class LogOutView(View):
             response = HttpResponse()
             response.delete_cookie("access_token")
             response.delete_cookie("refresh_token")
+            response.delete_cookie("isManager")
+            response.delete_cookie("isLogged")
             return response
         return HttpResponse()
 
