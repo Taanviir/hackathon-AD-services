@@ -16,7 +16,7 @@ from em_auth.middleware import JWTCookieAuthentication
 from em_auth.models import Employee
 from .serializers import *
 from .models import *
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.db.models import Q
 
 
@@ -168,7 +168,43 @@ def process_file(file_path):
 class OpinionRequestViewSet(viewsets.ViewSet):
     authentication_classes = [JWTCookieAuthentication]
     permission_classes = [IsAuthenticated]
-    parser_classes = (MultiPartParser, FormParser)
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
+
+    # """ Update the status of the opinion request """
+    def update(self, request, pk=None):
+        try:
+            opinion_request = OpinionRequest.objects.get(pk=pk)
+            request_title = opinion_request.title
+            dept_specific_qstns = opinion_request.target_departments.all()
+            # filtering them by the department of the user
+            user_dpt_questions = dept_specific_qstns.filter(
+                department_name=request.user.department
+            ).first()
+            print("incoming feedback: ", request.data.get("answers"), flush=True)
+            print("user_dpt_questions: ", user_dpt_questions, flush=True)
+            user_dpt_questions.feedback = request.data.get("answers")
+            user_dpt_questions.save()
+            opinion_request.status = "finished"
+            opinion_request.save()
+            # Return the updated data
+            return Response(
+                {
+                    "message": "Opinion request updated successfully",
+                    "feedback": "Feedback updated successfully",
+                    "status": opinion_request.status,
+                },
+                status=status.HTTP_200_OK,
+            )
+        except OpinionRequest.DoesNotExist:
+            return Response(
+                {"error": "OpinionRequest not found."}, status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            print("Error processing request:", str(e))
+            return Response(
+                {"error": f"Internal server error: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
     def list(self, request):
         # ? should we return the ones that came to his department or the ones he requested feeback for?
