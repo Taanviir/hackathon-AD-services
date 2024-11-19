@@ -19,7 +19,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-  
+
   # Backend service (Django)
   app-backend:
     build: ./containers/backend
@@ -42,7 +42,7 @@ services:
       interval: 15s
       timeout: 15s
       retries: 5
-      start_period: 10s #! waiting a little bit before starting healthchecks - for creating the test users
+      start_period: 10s
     ports:
       - "8000:8000"
 
