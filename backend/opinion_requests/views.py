@@ -222,6 +222,7 @@ class OpinionRequestViewSet(viewsets.ViewSet):
         requests_to_my_dpt = (
             OpinionRequest.objects.all()
             .filter(Q(target_departments__department_name=request.user.department))
+            .exclude(status="finished")
             .order_by("-created_at")
         )
         serializer = OpinionRequestSerializer(requests_to_my_dpt, many=True)
