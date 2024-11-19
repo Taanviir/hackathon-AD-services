@@ -21,7 +21,7 @@ const RequestInternalOpinion = () => {
 
     // Logging formData to see its contents
     for (let pair of formData.entries()) {
-      console.log(pair[0]+ ', ' + pair[1]);
+      console.log(pair[0] + ', ' + pair[1]);
     }
 
     try {
@@ -36,11 +36,11 @@ const RequestInternalOpinion = () => {
       console.log("Response JSON:", jsonResponse);
 
       if (response.ok) {
-          setResponseMessage("Request submitted successfully!");
+        setResponseMessage("Request submitted successfully!");
       } else {
-          setResponseMessage(
-              `Failed to submit the request. Error: ${jsonResponse.error || "Unknown error"}`
-          );
+        setResponseMessage(
+          `Failed to submit the request. Error: ${jsonResponse.error || "Unknown error"}`
+        );
       }
     } catch (error) {
       console.error("An error occurred:", error);
@@ -68,6 +68,33 @@ const RequestInternalOpinion = () => {
     const dashboard_data = await dashboard_response.json();
     console.log("dashboard_response");
     console.log(dashboard_data);
+
+    // testing patch method - updating a request - adding feedback
+    const feedback = ["This is a test feedback", "This is another test feedback"];
+    try {
+      const response = await fetch(`http://localhost:8000/api/opinion_request/1/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          feedback: feedback,  // Send the array directly
+          status: 'finished'   // Include status if needed
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update opinion request');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error updating opinion request:', error);
+      throw error;
+    }
   };
 
   return (
