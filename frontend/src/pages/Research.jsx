@@ -70,20 +70,14 @@ const Research = () => {
     <div className={`overflow-hidden ${searching ? "pt-5" : ""}`}>
       <div
         className={`flex flex-col absolute ${
-          searching ? "left-20 top-6" : "left-[45%] top-[40%]"
-        } transition-all duration-500`}
+          searching ? "opacity-0" : "left-[31%] top-[40%]"
+        }`}
       >
-        <img
-          src="/SmartGovLogo.svg"
-          alt="smart gov logo"
-          className={`pb-5 ${
-            searching ? "h-10" : "h-20"
-          } transition-all duration-500`}
-        />
+      <p className="text-5xl font-bold">How can I assist with your research today?</p>
       </div>
       <div
         className={`flex flex-col absolute ${
-          searching ? "left-[45%] top-5" : "left-[45%] top-[48%]"
+          searching ? "left-[45%] top-8" : "left-[45%] top-[48%]"
         } transition-all duration-500`}
       >
         <div className="relative flex-shrink-0 mx-3 w-[160%] max-w-[1000px] left-[-15%]">
@@ -138,7 +132,7 @@ const Research = () => {
             <div className="loading-rectangle mb-6"></div>
           </div>
         ) : (
-          response.length > 0 && (
+          response.length > 0 ? (
             <div className="bg-[rgba(255,255,255,0.56)] p-5 rounded-lg shadow-md">
               <h3 className="text-lg font-semibold mb-3 ms-2">Search Results</h3>
               <ul>
@@ -158,7 +152,11 @@ const Research = () => {
                 ))}
               </ul>
             </div>
-          )
+          ) : searching ? (
+            <div className="bg-[rgba(255,255,255,0.56)] p-5 rounded-lg shadow-md flex align-center">
+              <h3 className="text-lg font-semibold ms-2">No results found! Please try rephrasing your search!</h3>
+            </div>
+          ) : ""
         )}
       </div>
     </div>
